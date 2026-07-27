@@ -51,7 +51,7 @@ export default function MethodologyPage() {
             brand. Comparison and alternative intents may (aided).
           </p>
         </section>
-        <Link href="/onboarding" className="inline-block text-sky-600 hover:underline">
+        <Link href="/onboarding" className="inline-block text-primary hover:underline">
           Start setup →
         </Link>
       </main>

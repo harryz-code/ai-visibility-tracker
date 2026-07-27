@@ -65,14 +65,14 @@ function ChoiceCard({
       onClick={onClick}
       className={`flex w-full items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm transition ${
         selected
-          ? "border-sky-400 bg-sky-50 text-sky-950"
+          ? "border-primary bg-primary-muted text-primary"
           : "border-zinc-200 bg-white text-zinc-800 hover:border-zinc-300"
       }`}
     >
       <span
         className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-md border text-[10px] ${
           selected
-            ? "border-sky-500 bg-sky-500 text-white"
+            ? "border-primary bg-primary text-white"
             : "border-zinc-300 bg-white text-transparent"
         }`}
       >
@@ -85,17 +85,17 @@ function ChoiceCard({
 
 function PreviewPane({ step, brand }: { step: number; brand: string }) {
   return (
-    <div className="relative hidden h-full flex-col justify-center bg-sky-100/80 p-8 lg:flex">
+    <div className="relative hidden h-full flex-col justify-center bg-primary-muted p-8 lg:flex">
       <div className="mx-auto w-full max-w-xl overflow-hidden rounded-2xl border border-white/60 bg-white/90 shadow-lg opacity-90">
         <div className="flex gap-4 border-b border-zinc-100 px-4 py-3 text-xs font-medium text-zinc-500">
-          <span className={step >= 4 ? "text-sky-600" : ""}>Dashboard</span>
-          <span className={step === 4 || step === 5 ? "text-sky-600" : ""}>
+          <span className={step >= 4 ? "text-primary" : ""}>Dashboard</span>
+          <span className={step === 4 || step === 5 ? "text-primary" : ""}>
             Monitoring
           </span>
           <span>AI Visibility</span>
         </div>
         <div className="space-y-4 p-4">
-          <div className="h-28 rounded-lg bg-gradient-to-br from-sky-50 to-zinc-100 p-3">
+          <div className="h-28 rounded-lg bg-gradient-to-br from-primary-muted to-zinc-100 p-3">
             <p className="text-[10px] uppercase tracking-wide text-zinc-400">
               Visibility over time
             </p>
@@ -103,7 +103,7 @@ function PreviewPane({ step, brand }: { step: number; brand: string }) {
               {[40, 55, 48, 62, 58, 70, 66, 72].map((h, i) => (
                 <div
                   key={i}
-                  className="flex-1 rounded-t bg-sky-400/70"
+                  className="flex-1 rounded-t bg-primary/70"
                   style={{ height: `${h}%` }}
                 />
               ))}
@@ -142,7 +142,7 @@ function PreviewPane({ step, brand }: { step: number; brand: string }) {
           </div>
         </div>
       </div>
-      <p className="mt-8 text-center text-xs font-medium tracking-[0.2em] text-sky-800/80">
+      <p className="mt-8 text-center text-xs font-medium tracking-[0.2em] text-primary/80">
         — {STEP_CAPTIONS[step]} —
       </p>
     </div>
@@ -242,7 +242,7 @@ export function OnboardingWizard() {
     <div className="grid min-h-screen lg:grid-cols-[minmax(320px,420px)_1fr]">
       <div className="flex flex-col border-r border-zinc-200 bg-white">
         <div className="flex items-center gap-2 px-6 py-5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-sky-500 text-xs font-bold text-white">
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
             A
           </span>
           <span className="font-semibold tracking-tight text-zinc-900">AVT</span>
@@ -288,7 +288,7 @@ export function OnboardingWizard() {
               <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500">
                 Brand name
                 <input
-                  className="mt-1 w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400"
+                  className="mt-1 w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-primary"
                   placeholder="Your brand name"
                   value={state.brand.name}
                   onChange={(e) =>
@@ -410,7 +410,7 @@ export function OnboardingWizard() {
               <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500">
                 How did you find us?
                 <input
-                  className="mt-1 w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400"
+                  className="mt-1 w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-primary"
                   placeholder="e.g. Google, LinkedIn, a friend, X, a podcast..."
                   value={state.company.foundUs}
                   onChange={(e) =>
@@ -447,16 +447,16 @@ export function OnboardingWizard() {
                         services: s.services.filter((x) => x !== svc),
                       }))
                     }
-                    className="inline-flex items-center gap-1.5 rounded-full border border-sky-300 bg-sky-50 px-3 py-1.5 text-sm text-sky-900"
+                    className="inline-flex items-center gap-1.5 rounded-full border border-primary/40 bg-primary-muted px-3 py-1.5 text-sm text-primary"
                   >
                     {svc}
-                    <span className="text-sky-500">×</span>
+                    <span className="text-primary">×</span>
                   </button>
                 ))}
               </div>
               <div className="flex gap-2">
                 <input
-                  className="flex-1 rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-sky-400"
+                  className="flex-1 rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-primary"
                   placeholder="Add a service..."
                   value={newService}
                   onChange={(e) => setNewService(e.target.value)}
@@ -671,7 +671,7 @@ export function OnboardingWizard() {
           {step === 6 && (
             <div className="mt-3 space-y-5">
               <div className="text-center">
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500 text-xl font-bold text-white">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-white">
                   {(state.brand.name || "A").slice(0, 1).toUpperCase()}
                 </div>
                 <h1 className="text-2xl font-semibold text-zinc-900">
@@ -742,7 +742,7 @@ export function OnboardingWizard() {
                 type="button"
                 disabled={!canNext}
                 onClick={generatePrompts}
-                className="w-full rounded-xl bg-sky-500 px-4 py-3 text-sm font-medium text-white hover:bg-sky-600 disabled:opacity-50"
+                className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
               >
                 Generate prompts
               </button>
@@ -753,7 +753,7 @@ export function OnboardingWizard() {
                 onClick={() => {
                   generatePrompts();
                 }}
-                className="w-full rounded-xl bg-sky-500 px-4 py-3 text-sm font-medium text-white hover:bg-sky-600 disabled:opacity-50"
+                className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
               >
                 Next ({selectedCompetitorCount} selected)
               </button>
@@ -762,7 +762,7 @@ export function OnboardingWizard() {
                 type="button"
                 disabled={!canNext}
                 onClick={next}
-                className="w-full rounded-xl bg-sky-500 px-4 py-3 text-sm font-medium text-white hover:bg-sky-600 disabled:opacity-50"
+                className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
               >
                 Next ({selectedPromptCount} selected)
               </button>
@@ -770,7 +770,7 @@ export function OnboardingWizard() {
               <button
                 type="button"
                 onClick={finish}
-                className="w-full rounded-xl bg-sky-500 px-4 py-3 text-sm font-medium text-white hover:bg-sky-600"
+                className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-medium text-white hover:bg-primary-hover"
               >
                 Continue to App →
               </button>
@@ -779,7 +779,7 @@ export function OnboardingWizard() {
                 type="button"
                 disabled={!canNext}
                 onClick={next}
-                className="w-full rounded-xl bg-sky-500 px-4 py-3 text-sm font-medium text-white hover:bg-sky-600 disabled:opacity-50"
+                className="w-full rounded-xl bg-primary px-4 py-3 text-sm font-medium text-white hover:bg-primary-hover disabled:opacity-50"
               >
                 Next
               </button>

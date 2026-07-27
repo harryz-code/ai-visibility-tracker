@@ -38,7 +38,7 @@ export default function PricingPage() {
               Start setup
             </Link>
           </div>
-          <div className="rounded-2xl border border-sky-300 bg-sky-50 p-8">
+          <div className="rounded-2xl border border-primary/40 bg-primary-muted p-8">
             <h2 className="text-xl font-semibold">Team</h2>
             <p className="mt-2 text-3xl font-semibold">
               $299
@@ -52,7 +52,7 @@ export default function PricingPage() {
             </ul>
             <button
               type="button"
-              className="mt-8 w-full rounded-xl bg-sky-500 py-3 text-sm font-medium text-white hover:bg-sky-600"
+              className="mt-8 w-full rounded-xl bg-primary py-3 text-sm font-medium text-white hover:bg-primary-hover"
             >
               Coming soon — Stripe stub
             </button>

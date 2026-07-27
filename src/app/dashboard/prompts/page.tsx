@@ -41,7 +41,7 @@ export default function PromptsPage() {
             {data.promptResults.map((p) => (
               <tr
                 key={p.id}
-                className="cursor-pointer border-t border-zinc-100 hover:bg-sky-50/50"
+                className="cursor-pointer border-t border-zinc-100 hover:bg-primary-muted/50"
                 onClick={() => setOpen(p)}
               >
                 <td className="max-w-md truncate px-4 py-3 font-medium">

@@ -48,7 +48,7 @@ export default function LeaderboardPage() {
         </table>
         <Link
           href="/onboarding"
-          className="mt-10 inline-block rounded-lg bg-sky-500 px-5 py-2.5 text-sm font-medium text-white hover:bg-sky-600"
+          className="mt-10 inline-block rounded-lg bg-primary px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-hover"
         >
           Track your brand
         </Link>

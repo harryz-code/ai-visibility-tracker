@@ -16,6 +16,10 @@ export const metadata: Metadata = {
   title: "AVT — AI Visibility Tracker",
   description:
     "Measure how brands appear in AI assistant answers with statistical rigor.",
+  icons: {
+    icon: "/brand/mark.svg",
+    apple: "/brand/mark.svg",
+  },
 };
 
 export default function RootLayout({

@@ -91,7 +91,7 @@ export default function AdminPromptsPage() {
           <button
             type="button"
             onClick={regenerate}
-            className="rounded-lg bg-sky-500 px-4 py-2 text-sm font-medium text-white hover:bg-sky-600"
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary-hover"
           >
             Regenerate
           </button>
@@ -131,7 +131,7 @@ export default function AdminPromptsPage() {
                   <button
                     type="button"
                     onClick={() => toggle(p.id)}
-                    className="shrink-0 text-xs text-sky-600 hover:underline"
+                    className="shrink-0 text-xs text-primary hover:underline"
                   >
                     {p.selected ? "Deactivate" : "Activate"}
                   </button>

@@ -20,15 +20,15 @@ export function ScoreTimeseriesChart({ data }: { data: TimeseriesPoint[] }) {
     <div className="h-72 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <LineChart data={data} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
-          <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="#a1a1aa" />
-          <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} stroke="#a1a1aa" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
+          <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="var(--chart-axis)" />
+          <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} stroke="var(--chart-axis)" />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="openai" name="OpenAI" stroke="#18181b" strokeWidth={2} dot={false} />
-          <Line type="monotone" dataKey="anthropic" name="Anthropic" stroke="#d97706" strokeWidth={2} dot={false} />
-          <Line type="monotone" dataKey="gemini" name="Gemini" stroke="#2563eb" strokeWidth={2} dot={false} />
-          <Line type="monotone" dataKey="perplexity" name="Perplexity" stroke="#059669" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="openai" name="OpenAI" stroke="var(--chart-openai)" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="anthropic" name="Anthropic" stroke="var(--chart-anthropic)" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="gemini" name="Gemini" stroke="var(--chart-gemini)" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="perplexity" name="Perplexity" stroke="var(--chart-perplexity)" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </div>
@@ -62,7 +62,7 @@ export function MentionRateBarChart({ data }: { data: ModelMetricPoint[] }) {
             formatter={(value) => [`${value}%`, "Mention rate"]}
             labelFormatter={(l) => String(l)}
           />
-          <Bar dataKey="rate" fill="#18181b" radius={[4, 4, 0, 0]} name="Mention rate">
+          <Bar dataKey="rate" fill="var(--primary)" radius={[4, 4, 0, 0]} name="Mention rate">
             <ErrorBar
               dataKey="error"
               direction="y"

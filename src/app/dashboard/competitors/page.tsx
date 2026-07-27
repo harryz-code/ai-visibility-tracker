@@ -48,7 +48,7 @@ export default function CompetitorsPage() {
                 <td className="py-2 font-medium">
                   {c.brand}
                   {c.brand === data.trackedBrand && (
-                    <span className="ml-2 text-xs text-sky-600">You</span>
+                    <span className="ml-2 text-xs text-primary">You</span>
                   )}
                 </td>
                 <td>{c.overallScore}</td>

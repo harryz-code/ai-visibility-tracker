@@ -1,31 +1,30 @@
 import Link from "next/link";
+import { BrandMark } from "@/components/brand";
 
 export function SiteHeader() {
   return (
-    <header className="border-b border-zinc-200 bg-white/80 backdrop-blur">
+    <header className="border-b border-border bg-surface/80 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <Link href="/" className="font-semibold tracking-tight text-zinc-900">
-          AVT
-        </Link>
-        <nav className="flex flex-wrap gap-5 text-sm text-zinc-600">
-          <Link href="/methodology" className="hover:text-zinc-900">
+        <BrandMark />
+        <nav className="flex flex-wrap items-center gap-5 text-sm text-ink-muted">
+          <Link href="/methodology" className="hover:text-ink">
             Methodology
           </Link>
-          <Link href="/pricing" className="hover:text-zinc-900">
+          <Link href="/pricing" className="hover:text-ink">
             Pricing
           </Link>
-          <Link href="/report" className="hover:text-zinc-900">
+          <Link href="/report" className="hover:text-ink">
             Free report
           </Link>
-          <Link href="/leaderboard" className="hover:text-zinc-900">
+          <Link href="/leaderboard" className="hover:text-ink">
             Index
           </Link>
-          <Link href="/onboarding" className="hover:text-zinc-900">
+          <Link href="/onboarding" className="hover:text-ink">
             Start
           </Link>
           <Link
             href="/dashboard"
-            className="rounded-md bg-zinc-900 px-3 py-1 text-white hover:bg-zinc-800"
+            className="rounded-md bg-ink px-3 py-1 text-primary-foreground hover:opacity-90"
           >
             Dashboard
           </Link>

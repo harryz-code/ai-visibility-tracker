@@ -1,13 +1,66 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fafafa;
-  --foreground: #18181b;
+  /* Surfaces */
+  --background: #f7f7f5;
+  --foreground: #141414;
+  --surface: #ffffff;
+  --surface-muted: #f0f0ec;
+  --border: #e4e4e0;
+  --border-strong: #d4d4d0;
+
+  /* Ink */
+  --ink: #141414;
+  --ink-body: #3f3f3a;
+  --ink-muted: #73736c;
+
+  /* Brand primary — swap hex here when assets arrive */
+  --primary: #0b6bcb;
+  --primary-hover: #0958a8;
+  --primary-muted: #e8f2fc;
+  --primary-foreground: #ffffff;
+
+  /* Status */
+  --success: #0f7a4a;
+  --success-muted: #e6f6ee;
+  --warn: #b45309;
+  --warn-muted: #fff7ed;
+  --danger: #b42318;
+  --danger-muted: #fef3f2;
+
+  /* Chart series (models) */
+  --chart-openai: #141414;
+  --chart-anthropic: #c2410c;
+  --chart-gemini: #2563eb;
+  --chart-perplexity: #0f766e;
+  --chart-grid: #e4e4e0;
+  --chart-axis: #a1a19a;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-muted: var(--surface-muted);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-ink: var(--ink);
+  --color-ink-body: var(--ink-body);
+  --color-ink-muted: var(--ink-muted);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-muted: var(--primary-muted);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-success: var(--success);
+  --color-success-muted: var(--success-muted);
+  --color-warn: var(--warn);
+  --color-warn-muted: var(--warn-muted);
+  --color-danger: var(--danger);
+  --color-danger-muted: var(--danger-muted);
+  --color-chart-openai: var(--chart-openai);
+  --color-chart-anthropic: var(--chart-anthropic);
+  --color-chart-gemini: var(--chart-gemini);
+  --color-chart-perplexity: var(--chart-perplexity);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -16,4 +69,18 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* Utility helpers for CTAs until full Tailwind migration */
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-foreground);
+}
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+.chip-primary {
+  background: var(--primary-muted);
+  color: var(--primary);
+  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
 }
