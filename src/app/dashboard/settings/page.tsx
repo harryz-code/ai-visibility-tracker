@@ -2,16 +2,20 @@
 
 import { useEffect, useState } from "react";
 import { CategorySelect } from "@/components/category-select";
+import { PageHeader } from "@/components/page-header";
 import { loadWorkspace, saveWorkspace } from "@/lib/workspace/storage";
 import {
   OTHER_CATEGORY,
   resolveCategoryLabel,
+  type WorkspaceCompetitor,
   type WorkspaceState,
 } from "@/lib/workspace/types";
 
 export default function SettingsPage() {
   const [ws, setWs] = useState<WorkspaceState | null>(null);
   const [saved, setSaved] = useState(false);
+  const [name, setName] = useState("");
+  const [domain, setDomain] = useState("");
 
   useEffect(() => {
     setWs(loadWorkspace());
@@ -32,19 +36,46 @@ export default function SettingsPage() {
     setTimeout(() => setSaved(false), 2000);
   }
 
+  function toggleCompetitor(id: string) {
+    setWs({
+      ...ws!,
+      competitors: ws!.competitors.map((c) =>
+        c.id === id ? { ...c, selected: !c.selected } : c,
+      ),
+    });
+  }
+
+  function addCompetitor() {
+    if (!name.trim() || !ws) return;
+    const next: WorkspaceCompetitor = {
+      id: `custom-${Date.now()}`,
+      name: name.trim(),
+      domain: domain.trim() || "example.com",
+      selected: true,
+    };
+    setWs({ ...ws, competitors: [...ws.competitors, next] });
+    setName("");
+    setDomain("");
+  }
+
+  function removeCompetitor(id: string) {
+    setWs({
+      ...ws!,
+      competitors: ws!.competitors.filter((c) => c.id !== id),
+    });
+  }
+
   return (
     <main className="mx-auto max-w-2xl space-y-6 px-4 py-8 md:px-6">
-      <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Settings</h1>
-        <p className="text-sm text-zinc-500">
-          Demo workspace settings (localStorage only).
-        </p>
-      </div>
-      <div className="space-y-4 rounded-lg border border-zinc-200 bg-white p-6">
+      <PageHeader
+        title="Settings"
+        subtitle="Demo workspace (localStorage only)."
+      />
+      <div className="space-y-4 rounded-lg border border-border bg-surface p-6">
         <label className="block text-sm">
-          <span className="font-medium text-zinc-700">Tracked brand</span>
+          <span className="font-medium text-ink">Tracked brand</span>
           <input
-            className="mt-1 w-full rounded-lg border border-zinc-200 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
             value={ws.brand.name}
             onChange={(e) =>
               setWs({ ...ws, brand: { ...ws.brand, name: e.target.value } })
@@ -52,7 +83,7 @@ export default function SettingsPage() {
           />
         </label>
         <div className="text-sm">
-          <span className="font-medium text-zinc-700">Industry</span>
+          <span className="font-medium text-ink">Industry</span>
           <div className="mt-1">
             <CategorySelect
               value={ws.brand.category}
@@ -65,14 +96,14 @@ export default function SettingsPage() {
               }
             />
           </div>
-          <p className="mt-1 text-xs text-zinc-400">
+          <p className="mt-1 text-xs text-ink-muted">
             Active label: {resolveCategoryLabel(ws.brand)}
           </p>
         </div>
         <label className="block text-sm">
-          <span className="font-medium text-zinc-700">Cadence</span>
+          <span className="font-medium text-ink">Cadence</span>
           <select
-            className="mt-1 w-full rounded-lg border border-zinc-200 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
             value={ws.cadence}
             onChange={(e) =>
               setWs({
@@ -86,9 +117,9 @@ export default function SettingsPage() {
           </select>
         </label>
         <label className="block text-sm">
-          <span className="font-medium text-zinc-700">Plan badge</span>
+          <span className="font-medium text-ink">Plan badge</span>
           <select
-            className="mt-1 w-full rounded-lg border border-zinc-200 px-3 py-2"
+            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
             value={ws.plan}
             onChange={(e) =>
               setWs({
@@ -102,25 +133,63 @@ export default function SettingsPage() {
             <option value="team">Team ($299)</option>
           </select>
         </label>
+
         <div>
-          <p className="text-sm font-medium text-zinc-700">Competitors</p>
-          <ul className="mt-2 space-y-1 text-sm text-zinc-600">
-            {ws.competitors
-              .filter((c) => c.selected)
-              .map((c) => (
-                <li key={c.id}>
-                  {c.name} · {c.domain}
-                </li>
-              ))}
-            {ws.competitors.filter((c) => c.selected).length === 0 && (
-              <li className="text-zinc-400">None selected — run onboarding</li>
-            )}
+          <p className="text-sm font-medium text-ink">Competitors</p>
+          <ul className="mt-2 space-y-2">
+            {ws.competitors.map((c) => (
+              <li
+                key={c.id}
+                className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2 text-sm"
+              >
+                <label className="flex flex-1 cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    checked={c.selected}
+                    onChange={() => toggleCompetitor(c.id)}
+                  />
+                  <span>
+                    <span className="font-medium">{c.name}</span>
+                    <span className="ml-2 text-ink-muted">{c.domain}</span>
+                  </span>
+                </label>
+                <button
+                  type="button"
+                  className="text-xs text-danger hover:underline"
+                  onClick={() => removeCompetitor(c.id)}
+                >
+                  Remove
+                </button>
+              </li>
+            ))}
           </ul>
+          <div className="mt-3 flex gap-2">
+            <input
+              className="w-1/2 rounded-lg border border-border px-3 py-2 text-sm"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+            <input
+              className="w-1/2 rounded-lg border border-border px-3 py-2 text-sm"
+              placeholder="domain.com"
+              value={domain}
+              onChange={(e) => setDomain(e.target.value)}
+            />
+            <button
+              type="button"
+              onClick={addCompetitor}
+              className="rounded-lg border border-border px-3 text-sm hover:bg-surface-muted"
+            >
+              Add
+            </button>
+          </div>
         </div>
+
         <button
           type="button"
           onClick={save}
-          className="rounded-lg bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800"
+          className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
         >
           {saved ? "Saved" : "Save"}
         </button>
