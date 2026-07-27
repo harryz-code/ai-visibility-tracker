@@ -1,5 +1,5 @@
 import { eq, sql } from "drizzle-orm";
-import { inngest } from "./client";
+import { inngest } from "../client";
 import { getDb } from "@/db";
 import { completions, prompts, runs } from "@/db/schema";
 import { ALL_MODELS, complete, type ModelProvider } from "@/lib/models";
