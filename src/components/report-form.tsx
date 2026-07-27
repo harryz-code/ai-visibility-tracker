@@ -2,34 +2,14 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-
-const CATEGORIES = [
-  "BNPL",
-  "Neobank",
-  "CRM",
-  "HRIS",
-  "Payroll",
-  "Accounting",
-  "E-commerce platform",
-  "Email marketing",
-  "CDN",
-  "Observability",
-  "Feature flags",
-  "Auth",
-  "Payments",
-  "Lending",
-  "Insurance",
-  "Travel booking",
-  "Food delivery",
-  "Ride hail",
-  "Project management",
-  "Design tools",
-];
+import { CategorySelect } from "@/components/category-select";
+import { OTHER_CATEGORY } from "@/lib/workspace/types";
 
 export function ReportForm() {
   const router = useRouter();
   const [brand, setBrand] = useState("");
-  const [category, setCategory] = useState("BNPL");
+  const [category, setCategory] = useState("Financial Services");
+  const [categoryOther, setCategoryOther] = useState("");
   const [email, setEmail] = useState("");
   const [progress, setProgress] = useState(0);
   const [status, setStatus] = useState<string | null>(null);
@@ -37,6 +17,13 @@ export function ReportForm() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (category === OTHER_CATEGORY && !categoryOther.trim()) {
+      setStatus("Please describe your industry.");
+      return;
+    }
+    const categoryLabel =
+      category === OTHER_CATEGORY ? categoryOther.trim() : category;
+
     setStatus("Queuing mini-wave…");
     setProgress(5);
 
@@ -59,7 +46,7 @@ export function ReportForm() {
       const res = await fetch("/api/report", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ brand, category, email }),
+        body: JSON.stringify({ brand, category: categoryLabel, email }),
       });
       const json = await res.json();
       if (!res.ok) {
@@ -81,25 +68,24 @@ export function ReportForm() {
           required
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
-          placeholder="Affirm"
+          placeholder="Your brand"
           className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900"
         />
       </div>
       <div>
         <label className="block text-sm font-medium text-zinc-700">
-          Category
+          Industry
         </label>
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900"
-        >
-          {CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
+        <div className="mt-1">
+          <CategorySelect
+            value={category}
+            otherValue={categoryOther}
+            onChange={(c, o = "") => {
+              setCategory(c);
+              setCategoryOther(o);
+            }}
+          />
+        </div>
       </div>
       <div>
         <label className="block text-sm font-medium text-zinc-700">

@@ -6,7 +6,11 @@ import {
   suggestedCompetitors,
 } from "@/lib/demo/generator";
 import { loadWorkspace, saveWorkspace } from "@/lib/workspace/storage";
-import type { WorkspacePrompt, WorkspaceState } from "@/lib/workspace/types";
+import {
+  resolveCategoryLabel,
+  type WorkspacePrompt,
+  type WorkspaceState,
+} from "@/lib/workspace/types";
 
 export default function AdminPromptsPage() {
   const [ws, setWs] = useState<WorkspaceState | null>(null);
@@ -24,10 +28,13 @@ export default function AdminPromptsPage() {
     const competitors =
       comps.length > 0
         ? comps
-        : suggestedCompetitors(ws.brand.category, ws.brand.name);
+        : suggestedCompetitors(
+            resolveCategoryLabel(ws.brand),
+            ws.brand.name,
+          );
     const prompts = generatePromptCorpus({
       brandName: ws.brand.name || "Brand",
-      category: ws.brand.category || "BNPL",
+      category: resolveCategoryLabel(ws.brand) || "Financial Services",
       services: ws.services.length ? ws.services : ["Core product"],
       competitors,
       count: 30,

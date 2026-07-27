@@ -11,9 +11,19 @@ export function loadWorkspace(): WorkspaceState {
   try {
     const raw = window.localStorage.getItem(WORKSPACE_KEY);
     if (!raw) return emptyWorkspace();
-    const parsed = JSON.parse(raw) as WorkspaceState;
+    const parsed = JSON.parse(raw) as Partial<WorkspaceState>;
     if (parsed?.version !== 1) return emptyWorkspace();
-    return parsed;
+    const base = emptyWorkspace();
+    return {
+      ...base,
+      ...parsed,
+      brand: {
+        ...base.brand,
+        ...parsed.brand,
+        categoryOther: parsed.brand?.categoryOther ?? "",
+      },
+      company: { ...base.company, ...parsed.company },
+    };
   } catch {
     return emptyWorkspace();
   }

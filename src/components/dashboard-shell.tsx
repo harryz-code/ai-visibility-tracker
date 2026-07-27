@@ -4,7 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { loadWorkspace } from "@/lib/workspace/storage";
-import type { WorkspaceState } from "@/lib/workspace/types";
+import {
+  resolveCategoryLabel,
+  type WorkspaceState,
+} from "@/lib/workspace/types";
 import { cn } from "@/lib/utils";
 
 const NAV = [
@@ -81,7 +84,8 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <p className="text-sm text-zinc-500">
             <span className="font-medium text-zinc-800">{brand}</span>
             {" · "}
-            {ws?.brand.category || "BNPL"} / {ws?.brand.market || "US"}
+            {ws ? resolveCategoryLabel(ws.brand) : "Financial Services"} /{" "}
+            {ws?.brand.market || "US"}
           </p>
           <div className="flex gap-3 text-sm">
             <Link href="/report" className="text-zinc-600 hover:text-zinc-900">

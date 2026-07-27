@@ -38,7 +38,10 @@ export type WorkspaceState = {
     name: string;
     market: string;
     language: string;
+    /** Selected industry from INDUSTRIES, or "Other" */
     category: string;
+    /** Free-text when category === "Other" */
+    categoryOther: string;
   };
   company: {
     role: CompanyRole | null;
@@ -56,28 +59,43 @@ export type WorkspaceState = {
 
 export const WORKSPACE_KEY = "avt.workspace";
 
-export const DEFAULT_CATEGORIES = [
-  "BNPL",
-  "Neobank",
-  "CRM",
-  "HRIS",
-  "Payroll",
-  "Accounting",
-  "E-commerce platform",
-  "Email marketing",
-  "CDN",
-  "Observability",
-  "Feature flags",
-  "Auth",
-  "Payments",
-  "Lending",
+/** Industry list for onboarding / reports (+ Other with free text). */
+export const INDUSTRIES = [
+  "CPG",
+  "Financial Services",
+  "Retail",
+  "Media & Entertainment",
+  "Technology",
+  "Hospitality",
+  "QSRs & Restaurants",
+  "Home Services",
+  "Alcohol & Spirits",
+  "Consumer Electronics",
+  "Gaming",
+  "Fitness",
   "Insurance",
-  "Travel booking",
-  "Food delivery",
-  "Ride hail",
-  "Project management",
-  "Design tools",
+  "Sports",
+  "Betting & Prediction Markets",
+  "Beauty & Personal Care",
+  "Education",
 ] as const;
+
+export type Industry = (typeof INDUSTRIES)[number];
+
+export const OTHER_CATEGORY = "Other";
+
+/** @deprecated use INDUSTRIES — kept as alias for imports */
+export const DEFAULT_CATEGORIES = [...INDUSTRIES, OTHER_CATEGORY] as const;
+
+export function resolveCategoryLabel(brand: {
+  category: string;
+  categoryOther?: string;
+}): string {
+  if (brand.category === OTHER_CATEGORY) {
+    return brand.categoryOther?.trim() || OTHER_CATEGORY;
+  }
+  return brand.category;
+}
 
 export function emptyWorkspace(): WorkspaceState {
   return {
@@ -88,7 +106,8 @@ export function emptyWorkspace(): WorkspaceState {
       name: "",
       market: "United States",
       language: "English",
-      category: "BNPL",
+      category: "Financial Services",
+      categoryOther: "",
     },
     company: {
       role: null,

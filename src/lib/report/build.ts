@@ -1,38 +1,14 @@
 import { getDemoDataset } from "@/lib/demo/data";
+import { DEFAULT_CATEGORIES } from "@/lib/workspace/types";
 
 export type ReportPayload = ReturnType<typeof buildReportPayload>;
 
-const CATEGORIES = [
-  "BNPL",
-  "Neobank",
-  "CRM",
-  "HRIS",
-  "Payroll",
-  "Accounting",
-  "E-commerce platform",
-  "Email marketing",
-  "CDN",
-  "Observability",
-  "Feature flags",
-  "Auth",
-  "Payments",
-  "Lending",
-  "Insurance",
-  "Travel booking",
-  "Food delivery",
-  "Ride hail",
-  "Project management",
-  "Design tools",
-] as const;
-
 export function listReportCategories() {
-  return [...CATEGORIES];
+  return [...DEFAULT_CATEGORIES];
 }
 
 export function buildReportPayload(brandName: string, categoryName: string) {
-  const data = getDemoDataset(
-    categoryName === "BNPL" ? brandName || "Affirm" : brandName || "Acme",
-  );
+  const data = getDemoDataset(brandName.trim() || "Affirm");
 
   // Re-label tracked brand for custom inputs while keeping competitor structure
   const tracked = brandName.trim() || data.trackedBrand;

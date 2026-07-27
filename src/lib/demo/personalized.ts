@@ -1,6 +1,7 @@
 import { wilsonInterval, isSignificantChange } from "@/lib/metrics/wilson";
 import type { ModelProvider } from "@/lib/models/types";
 import type { IntentType, WorkspaceState } from "@/lib/workspace/types";
+import { resolveCategoryLabel } from "@/lib/workspace/types";
 import { getDemoDataset, type DemoDataset } from "./data";
 
 export type PromptResultRow = {
@@ -158,7 +159,9 @@ export function getPersonalizedDemo(
     trackedBrand: tracked,
     category: {
       ...base.category,
-      name: workspace?.brand.category || base.category.name,
+      name: workspace
+        ? resolveCategoryLabel(workspace.brand)
+        : base.category.name,
       market: workspace?.brand.market || base.category.market,
     },
     competitors: competitors.sort((a, b) => b.overallScore - a.overallScore),

@@ -1,8 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { CategorySelect } from "@/components/category-select";
 import { loadWorkspace, saveWorkspace } from "@/lib/workspace/storage";
-import type { WorkspaceState } from "@/lib/workspace/types";
+import {
+  OTHER_CATEGORY,
+  resolveCategoryLabel,
+  type WorkspaceState,
+} from "@/lib/workspace/types";
 
 export default function SettingsPage() {
   const [ws, setWs] = useState<WorkspaceState | null>(null);
@@ -16,6 +21,12 @@ export default function SettingsPage() {
 
   function save() {
     if (!ws) return;
+    if (
+      ws.brand.category === OTHER_CATEGORY &&
+      !ws.brand.categoryOther.trim()
+    ) {
+      return;
+    }
     saveWorkspace(ws);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
@@ -40,16 +51,24 @@ export default function SettingsPage() {
             }
           />
         </label>
-        <label className="block text-sm">
-          <span className="font-medium text-zinc-700">Category</span>
-          <input
-            className="mt-1 w-full rounded-lg border border-zinc-200 px-3 py-2"
-            value={ws.brand.category}
-            onChange={(e) =>
-              setWs({ ...ws, brand: { ...ws.brand, category: e.target.value } })
-            }
-          />
-        </label>
+        <div className="text-sm">
+          <span className="font-medium text-zinc-700">Industry</span>
+          <div className="mt-1">
+            <CategorySelect
+              value={ws.brand.category}
+              otherValue={ws.brand.categoryOther}
+              onChange={(category, categoryOther = "") =>
+                setWs({
+                  ...ws,
+                  brand: { ...ws.brand, category, categoryOther },
+                })
+              }
+            />
+          </div>
+          <p className="mt-1 text-xs text-zinc-400">
+            Active label: {resolveCategoryLabel(ws.brand)}
+          </p>
+        </div>
         <label className="block text-sm">
           <span className="font-medium text-zinc-700">Cadence</span>
           <select

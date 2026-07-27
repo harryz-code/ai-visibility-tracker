@@ -8,9 +8,11 @@ import {
   suggestedServices,
 } from "@/lib/demo/generator";
 import { saveWorkspace } from "@/lib/workspace/storage";
+import { CategorySelect } from "@/components/category-select";
 import {
-  DEFAULT_CATEGORIES,
   emptyWorkspace,
+  OTHER_CATEGORY,
+  resolveCategoryLabel,
   type CompanyRole,
   type CompanySize,
   type ModelProvider,
@@ -181,21 +183,27 @@ export function OnboardingWizard() {
     if (step > 0) setStep(step - 1);
   }
 
-  function onCategoryChange(category: string) {
+  function onCategoryChange(category: string, other = "") {
     setState((s) => ({
       ...s,
-      brand: { ...s.brand, category },
-      services: suggestedServices(category),
-      competitors: suggestedCompetitors(category, s.brand.name),
+      brand: { ...s.brand, category, categoryOther: other },
+      services: suggestedServices(
+        category === OTHER_CATEGORY ? other || category : category,
+      ),
+      competitors: suggestedCompetitors(
+        category === OTHER_CATEGORY ? other || category : category,
+        s.brand.name,
+      ),
       prompts: [],
     }));
   }
 
   function generatePrompts() {
     const selected = state.competitors.filter((c) => c.selected);
+    const categoryLabel = resolveCategoryLabel(state.brand);
     const prompts = generatePromptCorpus({
       brandName: state.brand.name || "Your brand",
-      category: state.brand.category,
+      category: categoryLabel,
       services: state.services,
       competitors: selected,
       count: 30,
@@ -215,7 +223,13 @@ export function OnboardingWizard() {
   }
 
   const canNext = (() => {
-    if (step === 0) return Boolean(state.brand.name.trim() && state.brand.url.trim());
+    if (step === 0) {
+      const hasBrand = Boolean(state.brand.name.trim() && state.brand.url.trim());
+      const otherOk =
+        state.brand.category !== OTHER_CATEGORY ||
+        Boolean(state.brand.categoryOther.trim());
+      return hasBrand && otherOk;
+    }
     if (step === 1) return Boolean(state.company.role && state.company.size);
     if (step === 2) return state.services.length > 0;
     if (step === 3) return selectedCompetitorCount > 0;
@@ -329,18 +343,14 @@ export function OnboardingWizard() {
                 </label>
               </div>
               <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500">
-                Category
-                <select
-                  className="mt-1 w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm"
-                  value={state.brand.category}
-                  onChange={(e) => onCategoryChange(e.target.value)}
-                >
-                  {DEFAULT_CATEGORIES.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
+                Industry
+                <div className="mt-1">
+                  <CategorySelect
+                    value={state.brand.category}
+                    otherValue={state.brand.categoryOther}
+                    onChange={onCategoryChange}
+                  />
+                </div>
               </label>
             </div>
           )}
