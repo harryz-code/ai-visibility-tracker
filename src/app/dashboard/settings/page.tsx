@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { CategorySelect } from "@/components/category-select";
+import { IndustryGrid } from "@/components/industry-grid";
+import { IconAdd } from "@/components/icons";
 import { PageHeader } from "@/components/page-header";
 import { loadWorkspace, saveWorkspace } from "@/lib/workspace/storage";
 import {
@@ -71,11 +72,11 @@ export default function SettingsPage() {
         title="Settings"
         subtitle="Demo workspace (localStorage only)."
       />
-      <div className="space-y-4 rounded-lg border border-border bg-surface p-6">
+      <div className="space-y-4 rounded-[12px] border border-border bg-surface p-6 card-shadow">
         <label className="block text-sm">
           <span className="font-medium text-ink">Tracked brand</span>
           <input
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+            className="focus-ring mt-1 w-full rounded-[12px] border border-border px-3 py-2 outline-none focus:border-primary"
             value={ws.brand.name}
             onChange={(e) =>
               setWs({ ...ws, brand: { ...ws.brand, name: e.target.value } })
@@ -84,8 +85,8 @@ export default function SettingsPage() {
         </label>
         <div className="text-sm">
           <span className="font-medium text-ink">Industry</span>
-          <div className="mt-1">
-            <CategorySelect
+          <div className="mt-2">
+            <IndustryGrid
               value={ws.brand.category}
               otherValue={ws.brand.categoryOther}
               onChange={(category, categoryOther = "") =>
@@ -96,14 +97,14 @@ export default function SettingsPage() {
               }
             />
           </div>
-          <p className="mt-1 text-xs text-ink-muted">
+          <p className="mt-2 text-xs text-ink-muted">
             Active label: {resolveCategoryLabel(ws.brand)}
           </p>
         </div>
         <label className="block text-sm">
           <span className="font-medium text-ink">Cadence</span>
           <select
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+            className="focus-ring mt-1 w-full rounded-[12px] border border-border px-3 py-2"
             value={ws.cadence}
             onChange={(e) =>
               setWs({
@@ -119,7 +120,7 @@ export default function SettingsPage() {
         <label className="block text-sm">
           <span className="font-medium text-ink">Plan badge</span>
           <select
-            className="mt-1 w-full rounded-lg border border-border px-3 py-2"
+            className="focus-ring mt-1 w-full rounded-[12px] border border-border px-3 py-2"
             value={ws.plan}
             onChange={(e) =>
               setWs({
@@ -140,7 +141,7 @@ export default function SettingsPage() {
             {ws.competitors.map((c) => (
               <li
                 key={c.id}
-                className="flex items-center justify-between gap-2 rounded-lg border border-border px-3 py-2 text-sm"
+                className="flex items-center justify-between gap-2 rounded-[12px] border border-border px-3 py-2 text-sm"
               >
                 <label className="flex flex-1 cursor-pointer items-center gap-2">
                   <input
@@ -165,13 +166,13 @@ export default function SettingsPage() {
           </ul>
           <div className="mt-3 flex gap-2">
             <input
-              className="w-1/2 rounded-lg border border-border px-3 py-2 text-sm"
+              className="focus-ring w-1/2 rounded-[12px] border border-border px-3 py-2 text-sm outline-none focus:border-primary"
               placeholder="Name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
             <input
-              className="w-1/2 rounded-lg border border-border px-3 py-2 text-sm"
+              className="focus-ring w-1/2 rounded-[12px] border border-border px-3 py-2 text-sm outline-none focus:border-primary"
               placeholder="domain.com"
               value={domain}
               onChange={(e) => setDomain(e.target.value)}
@@ -179,8 +180,10 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={addCompetitor}
-              className="rounded-lg border border-border px-3 text-sm hover:bg-surface-muted"
+              className="inline-flex h-btn-md items-center gap-1 rounded-[12px] border border-border px-3 text-sm hover:bg-surface-muted"
+              aria-label="Add competitor"
             >
+              <IconAdd size={16} />
               Add
             </button>
           </div>
@@ -189,7 +192,7 @@ export default function SettingsPage() {
         <button
           type="button"
           onClick={save}
-          className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90"
+          className="h-btn-md rounded-[8px] bg-ink px-4 text-sm font-medium text-primary-foreground hover:opacity-90"
         >
           {saved ? "Saved" : "Save"}
         </button>

@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AVT — Design System v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ---- Primary ---- */
+  --iris:#4a2ce0;            /* CTA / selected / links */
+  --iris-press:#3a1fc2;      /* pressed */
+  --iris-wash:#ece9fd;       /* selected chips, soft fills */
+  --iris-wash-2:#f5f3fe;     /* faintest fill */
+
+  /* ---- Ink / text ---- */
+  --ink:#16151f;            /* headings */
+  --body:#3b3a47;           /* body text */
+  --muted:#8b8a99;          /* meta / captions */
+
+  /* ---- Surface ---- */
+  --surface:#f9f9fc;        /* page bg */
+  --card:#ffffff;           /* card bg */
+  --border:#e9e8f0;         /* hairlines */
+  --border-strong:#d7d5e2;
+
+  /* ---- Status ---- */
+  --success:#1b9e6b;        /* win */
+  --success-wash:#e3f6ee;
+  --warn:#e6a700;           /* alert */
+  --warn-wash:#fbf1d6;
+  --danger:#e23d4b;         /* lose */
+  --danger-wash:#fceaec;
+
+  /* ---- Model series ---- */
+  --m-openai:#10a37f;
+  --m-claude:#d97757;
+  --m-gemini:#3b82f6;
+  --m-perplexity:#1fa9c0;
+  --m-you:#4a2ce0;          /* your brand */
+  --m-comp:#9a99a8;         /* competitors */
+
+  /* ---- Industry tile tints (rotating) ---- */
+  --t1:#ece9fd; --t1i:#5b3ee6;   /* iris */
+  --t2:#e0f4f1; --t2i:#0f9c7b;   /* teal */
+  --t3:#fbf0d8; --t3i:#c98a06;   /* amber */
+  --t4:#fce8ea; --t4i:#d43a48;   /* rose */
+  --t5:#e6f0fd; --t5i:#2f6fe0;   /* blue */
+
+  /* ---- Radius ---- */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-full:999px;
+  --shadow-card:0 1px 2px rgba(22,21,31,.04), 0 4px 16px rgba(22,21,31,.05);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0; background:var(--surface); color:var(--body);
+  font-family:"Hanken Grotesk",system-ui,sans-serif;
+  font-size:16px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:"Space Grotesk",sans-serif; color:var(--ink); margin:0; letter-spacing:-.02em}
+.mono{font-family:"JetBrains Mono",monospace}
+a{color:var(--iris); text-decoration:none}
+
+/* layout */
+.wrap{display:grid; grid-template-columns:232px 1fr; max-width:1240px; margin:0 auto}
+nav.side{
+  position:sticky; top:0; align-self:start; height:100vh; padding:32px 20px;
+  border-right:1px solid var(--border); background:var(--card);
+}
+nav.side .brand{display:flex; align-items:center; gap:10px; margin-bottom:28px}
+nav.side .brand .wm{font-family:"Space Grotesk"; font-weight:600; font-size:19px; color:var(--ink); letter-spacing:-.03em}
+nav.side ol{list-style:none; margin:0; padding:0; counter-reset:s}
+nav.side li{counter-increment:s; margin:2px 0}
+nav.side a{
+  display:flex; gap:10px; align-items:baseline; padding:8px 10px; border-radius:var(--r-sm);
+  color:var(--body); font-size:14px; font-weight:500;
+}
+nav.side a:hover{background:var(--iris-wash-2)}
+nav.side a::before{content:counter(s,decimal-leading-zero); font-family:"JetBrains Mono"; font-size:11px; color:var(--muted)}
+main{padding:0 clamp(24px,5vw,72px) 120px}
+
+section{padding:72px 0 8px; border-bottom:1px solid var(--border)}
+section:last-child{border-bottom:0}
+.eyebrow{font-family:"JetBrains Mono"; font-size:11.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--iris); font-weight:500}
+.sec-h{font-size:30px; margin:10px 0 6px}
+.sec-sub{color:var(--muted); max-width:60ch; margin:0 0 28px}
+
+/* cover */
+.cover{padding-top:64px}
+.cover .hero-mark{margin:0 0 26px}
+.cover h1{font-size:clamp(40px,7vw,72px); line-height:1.02; margin-bottom:18px}
+.cover h1 .u{color:var(--iris)}
+.cover .lede{font-size:19px; max-width:56ch; color:var(--body)}
+.meta-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:26px}
+.pill{font-family:"JetBrains Mono"; font-size:12px; padding:6px 12px; border-radius:var(--r-full); background:var(--card); border:1px solid var(--border); color:var(--body)}
+
+/* color */
+.swatches{display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:14px}
+.sw{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); overflow:hidden; box-shadow:var(--shadow-card)}
+.sw .chip{height:76px}
+.sw .txt{padding:11px 13px}
+.sw .name{font-weight:600; color:var(--ink); font-size:13.5px}
+.sw .role{font-size:12px; color:var(--muted); margin:1px 0 7px; line-height:1.3}
+.sw .hex{font-family:"JetBrains Mono"; font-size:12px; color:var(--body); background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:2px 7px; display:inline-block; cursor:copy}
+.grp-label{font-family:"JetBrains Mono"; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:26px 0 12px}
+.series-row{display:flex; flex-wrap:wrap; gap:20px; align-items:flex-end; background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:22px; box-shadow:var(--shadow-card)}
+.bar{width:46px; border-radius:6px 6px 0 0}
+.bar-wrap{text-align:center}
+.bar-wrap .lbl{font-size:12px; color:var(--body); margin-top:8px; font-weight:500}
+.bar-wrap .hx{font-family:"JetBrains Mono"; font-size:10.5px; color:var(--muted)}
+
+/* type */
+.typecard{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:26px; margin-bottom:16px; box-shadow:var(--shadow-card)}
+.typecard .role{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px}
+.typecard .role .n{font-family:"JetBrains Mono"; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--iris)}
+.typecard .role .fam{font-size:13px; color:var(--muted)}
+.spec-display{font-family:"Space Grotesk"; font-weight:600; font-size:46px; line-height:1.05; color:var(--ink); letter-spacing:-.03em}
+.spec-body{font-size:18px; max-width:60ch}
+.spec-mono{font-family:"JetBrains Mono"; font-size:22px; color:var(--ink)}
+.ramp{display:grid; gap:14px}
+.ramp .r{display:flex; align-items:baseline; gap:18px; border-top:1px solid var(--border); padding-top:14px}
+.ramp .r:first-child{border-top:0; padding-top:0}
+.ramp .tag{font-family:"JetBrains Mono"; font-size:11px; color:var(--muted); width:120px; flex:none; padding-top:6px}
+.ramp h1.d{font-size:44px;line-height:1.05}.ramp h2.d{font-size:30px;line-height:1.1}
+.ramp h3.d{font-size:22px;line-height:1.2}
+.ramp .b{font-size:16px}.ramp .lab{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--ink)}
+.ramp .cap{font-size:12.5px;color:var(--muted)}
+
+/* logo */
+.logo-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px}
+.logo-cell{border:1px solid var(--border); border-radius:var(--r-md); display:flex; align-items:center; justify-content:center; min-height:150px; box-shadow:var(--shadow-card)}
+.logo-cell.dark{background:var(--ink)}
+.logo-cell.iris{background:var(--iris)}
+.logo-cell.light{background:var(--card)}
+.cell-cap{font-family:"JetBrains Mono"; font-size:11px; color:var(--muted); margin-top:8px; text-align:center}
+.lockups{display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px}
+.lockup{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:34px; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-card)}
+.wordmark{font-family:"Space Grotesk"; font-weight:600; letter-spacing:-.04em; color:var(--ink)}
+.icon-sizes{display:flex; align-items:flex-end; gap:26px; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:26px; margin-top:16px; box-shadow:var(--shadow-card)}
+.icon-sizes .u{text-align:center}
+.icon-sizes .u .cap{font-family:"JetBrains Mono"; font-size:10.5px; color:var(--muted); margin-top:8px}
+
+/* icons */
+.iconset{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:24px; box-shadow:var(--shadow-card); margin-bottom:16px}
+.iconset h4{font-family:"JetBrains Mono"; font-weight:500; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:18px}
+.icon-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(96px,1fr)); gap:8px}
+.ic{display:flex; flex-direction:column; align-items:center; gap:9px; padding:16px 6px; border-radius:var(--r-sm)}
+.ic:hover{background:var(--iris-wash-2)}
+.ic svg{color:var(--ink)}
+.ic .nm{font-size:11.5px; color:var(--body)}
+.ic.win svg{color:var(--success)} .ic.lose svg{color:var(--danger)} .ic.sig svg{color:var(--warn)}
+.ic.present svg{color:var(--iris)} .ic.absent svg{color:var(--muted)} .ic.supp svg{color:var(--muted)}
+.model-badges{display:flex; gap:22px; flex-wrap:wrap; margin-top:6px}
+.mb{display:flex; flex-direction:column; align-items:center; gap:9px}
+.mb .badge{width:40px; height:40px; border-radius:var(--r-full); display:flex; align-items:center; justify-content:center; color:#fff; font-family:"Space Grotesk"; font-weight:600; font-size:17px}
+.mb .nm{font-size:11.5px; color:var(--body)}
+
+/* industry */
+.ind-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px}
+.ind{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:12px 14px}
+.ind .tile{width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; flex:none}
+.ind .nm{font-size:13px; font-weight:500; color:var(--ink); line-height:1.2}
+
+/* og + favicon */
+.og-wrap{display:grid; grid-template-columns:1fr; gap:20px}
+.og{width:100%; max-width:600px; aspect-ratio:1200/630; border-radius:var(--r-md); border:1px solid var(--border); overflow:hidden; box-shadow:var(--shadow-card); position:relative; background:var(--ink); color:#fff; padding:44px; display:flex; flex-direction:column; justify-content:space-between}
+.og .top{display:flex; align-items:center; gap:12px}
+.og .wm2{font-family:"Space Grotesk"; font-weight:600; font-size:22px; letter-spacing:-.03em}
+.og h3.ogt{color:#fff; font-size:34px; line-height:1.12; max-width:20ch}
+.og .score{display:flex; align-items:baseline; gap:10px}
+.og .score .big{font-family:"JetBrains Mono"; font-weight:500; font-size:52px; color:#fff}
+.og .score .lbl{font-family:"JetBrains Mono"; font-size:12px; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.6)}
+.og .glow{position:absolute; right:-80px; top:-80px; width:320px; height:320px; border-radius:50%; background:radial-gradient(circle, rgba(74,44,224,.55), transparent 70%)}
+.fav-row{display:flex; gap:16px; align-items:flex-end; flex-wrap:wrap; background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:22px; box-shadow:var(--shadow-card)}
+.fav-row .u{text-align:center}
+.fav-row .u .cap{font-family:"JetBrains Mono"; font-size:10.5px; color:var(--muted); margin-top:7px}
+
+/* motion / spacing */
+.mo-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px}
+.mo{background:var(--card); border:1px solid var(--border); border-radius:var(--r-md); padding:22px; box-shadow:var(--shadow-card)}
+.mo h4{font-family:"JetBrains Mono"; font-weight:500; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin-bottom:16px}
+.radii{display:flex; gap:14px; align-items:flex-end; flex-wrap:wrap}
+.radii .rr{width:56px; height:56px; background:var(--iris-wash); border:1.5px solid var(--iris)}
+.radii .cap{font-family:"JetBrains Mono"; font-size:10.5px; color:var(--muted); text-align:center; margin-top:6px}
+.btns{display:flex; gap:12px; align-items:center; flex-wrap:wrap}
+.btn{font-family:"Hanken Grotesk"; font-weight:600; font-size:14px; border-radius:var(--r-sm); border:0; cursor:pointer; display:inline-flex; align-items:center; gap:8px}
+.btn.primary{background:var(--iris); color:#fff}
+.btn.primary:hover{background:var(--iris-press)}
+.btn.secondary{background:var(--card); color:var(--ink); border:1px solid var(--border-strong)}
+.btn.h-lg{height:44px; padding:0 20px}
+.btn.h-md{height:38px; padding:0 16px}
+.btn.h-sm{height:32px; padding:0 13px; font-size:13px}
+.btn.focus{outline:none; box-shadow:0 0 0 3px var(--iris-wash), 0 0 0 4px var(--iris)}
+.mo .row{display:flex; justify-content:space-between; font-size:13px; padding:7px 0; border-top:1px solid var(--border)}
+.mo .row:first-of-type{border-top:0}
+.mo .row .v{font-family:"JetBrains Mono"; font-size:12px; color:var(--ink)}
+.shadow-demo{height:60px; background:var(--card); border-radius:var(--r-md); box-shadow:var(--shadow-card); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-size:12.5px; color:var(--muted); margin-top:6px}
+
+.note{background:var(--iris-wash-2); border:1px solid var(--iris-wash); border-left:3px solid var(--iris); border-radius:var(--r-sm); padding:13px 16px; font-size:13.5px; color:var(--body); margin-top:18px}
+.note b{color:var(--ink)}
+
+@media(max-width:860px){
+  .wrap{grid-template-columns:1fr}
+  nav.side{display:none}
+  .lockups{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<nav class="side">
+  <div class="brand">
+    <!-- app mark -->
+    <svg width="28" height="28" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect width="32" height="32" rx="8" fill="var(--iris)"/>
+      <circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2"/>
+      <circle cx="16" cy="16" r="2.4" fill="#fff"/>
+    </svg>
+    <span class="wm">AVT</span>
+  </div>
+  <ol>
+    <li><a href="#direction">Direction</a></li>
+    <li><a href="#color">Color</a></li>
+    <li><a href="#type">Typography</a></li>
+    <li><a href="#logo">Logo &amp; mark</a></li>
+    <li><a href="#icons">Icon set</a></li>
+    <li><a href="#industry">Industry icons</a></li>
+    <li><a href="#social">OG &amp; favicon</a></li>
+    <li><a href="#motion">Motion &amp; spacing</a></li>
+  </ol>
+</nav>
+
+<main>
+
+<!-- 0. COVER / DIRECTION -->
+<section id="direction" class="cover" style="border-bottom:1px solid var(--border)">
+  <div class="hero-mark">
+    <svg width="72" height="72" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+      <rect width="32" height="32" rx="8" fill="var(--iris)"/>
+      <circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2"/>
+      <circle cx="16" cy="16" r="2.4" fill="#fff"/>
+    </svg>
+  </div>
+  <div class="eyebrow">AVT · Design System v1 · light</div>
+  <h1>Measure where your brand<br><span class="u">shows up</span> in AI answers.</h1>
+  <p class="lede">A precise instrument, made self-serve. The identity reads data-forward and research-grade, but approachable — set deliberately apart from enterprise dark dashboards and the category's default sky-blue SaaS.</p>
+  <div class="meta-row">
+    <span class="pill">Primary · Iris #4A2CE0</span>
+    <span class="pill">Display · Space Grotesk</span>
+    <span class="pill">Body · Hanken Grotesk</span>
+    <span class="pill">Data · JetBrains Mono</span>
+    <span class="pill">Light-only v1</span>
+  </div>
+  <div class="note"><b>Name is temporary.</b> The mark is letterform-free (aperture + data-point), so renaming from “AVT” only touches the wordmark, never the symbol.</div>
+</section>
+
+<!-- 1. COLOR -->
+<section id="color">
+  <div class="eyebrow">01 — Foundation</div>
+  <h2 class="sec-h">Color</h2>
+  <p class="sec-sub">Tokens are CSS variables in <span class="mono">:root</span>, so this page doubles as the export. Tap any hex to copy.</p>
+
+  <div class="grp-label">Primary</div>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:var(--iris)"></div><div class="txt"><div class="name">Iris</div><div class="role">CTA · selected · links</div><span class="hex">#4A2CE0</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--iris-press)"></div><div class="txt"><div class="name">Iris Pressed</div><div class="role">active / pressed state</div><span class="hex">#3A1FC2</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--iris-wash)"></div><div class="txt"><div class="name">Iris Wash</div><div class="role">selected chips · soft fills</div><span class="hex">#ECE9FD</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--iris-wash-2); border-bottom:1px solid var(--border)"></div><div class="txt"><div class="name">Iris Wash 2</div><div class="role">faintest hover fill</div><span class="hex">#F5F3FE</span></div></div>
+  </div>
+
+  <div class="grp-label">Text · Ink</div>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:var(--ink)"></div><div class="txt"><div class="name">Ink</div><div class="role">headings</div><span class="hex">#16151F</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--body)"></div><div class="txt"><div class="name">Body</div><div class="role">paragraph text</div><span class="hex">#3B3A47</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--muted)"></div><div class="txt"><div class="name">Muted</div><div class="role">meta · captions</div><span class="hex">#8B8A99</span></div></div>
+  </div>
+
+  <div class="grp-label">Surface</div>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:var(--surface); border-bottom:1px solid var(--border)"></div><div class="txt"><div class="name">Surface</div><div class="role">page background</div><span class="hex">#F9F9FC</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--card); border-bottom:1px solid var(--border)"></div><div class="txt"><div class="name">Card</div><div class="role">panels · cards</div><span class="hex">#FFFFFF</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--border)"></div><div class="txt"><div class="name">Border</div><div class="role">hairlines · dividers</div><span class="hex">#E9E8F0</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--border-strong)"></div><div class="txt"><div class="name">Border Strong</div><div class="role">inputs · secondary btn</div><span class="hex">#D7D5E2</span></div></div>
+  </div>
+
+  <div class="grp-label">Status</div>
+  <div class="swatches">
+    <div class="sw"><div class="chip" style="background:var(--success)"></div><div class="txt"><div class="name">Success</div><div class="role">win · positive delta</div><span class="hex">#1B9E6B</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--warn)"></div><div class="txt"><div class="name">Warn</div><div class="role">alerts · significance</div><span class="hex">#E6A700</span></div></div>
+    <div class="sw"><div class="chip" style="background:var(--danger)"></div><div class="txt"><div class="name">Danger</div><div class="role">lose · negative delta</div><span class="hex">#E23D4B</span></div></div>
+  </div>
+
+  <div class="grp-label">Model series — one recognizable color per engine</div>
+  <div class="series-row">
+    <div class="bar-wrap"><div class="bar" style="height:96px; background:var(--m-openai)"></div><div class="lbl">OpenAI</div><div class="hx">#10A37F</div></div>
+    <div class="bar-wrap"><div class="bar" style="height:74px; background:var(--m-claude)"></div><div class="lbl">Claude</div><div class="hx">#D97757</div></div>
+    <div class="bar-wrap"><div class="bar" style="height:112px; background:var(--m-gemini)"></div><div class="lbl">Gemini</div><div class="hx">#3B82F6</div></div>
+    <div class="bar-wrap"><div class="bar" style="height:60px; background:var(--m-perplexity)"></div><div class="lbl">Perplexity</div><div class="hx">#1FA9C0</div></div>
+    <div class="bar-wrap" style="margin-left:8px; border-left:1px solid var(--border); padding-left:26px"><div class="bar" style="height:128px; background:var(--m-you)"></div><div class="lbl">You</div><div class="hx">#4A2CE0</div></div>
+    <div class="bar-wrap"><div class="bar" style="height:88px; background:var(--m-comp)"></div><div class="lbl">Competitors</div><div class="hx">#9A99A8</div></div>
+  </div>
+</section>
+
+<!-- 2. TYPE -->
+<section id="type">
+  <div class="eyebrow">02 — Foundation</div>
+  <h2 class="sec-h">Typography</h2>
+  <p class="sec-sub">Three roles, all open-source and free to embed. Space Grotesk carries the personality; Hanken Grotesk keeps UI calm; JetBrains Mono handles scores, CIs and tables.</p>
+
+  <div class="typecard">
+    <div class="role"><span class="n">Display / H1</span><span class="fam">Space Grotesk · 500 / 600 / 700</span></div>
+    <div class="spec-display">Share of answer, tracked.</div>
+  </div>
+  <div class="typecard">
+    <div class="role"><span class="n">UI / Body</span><span class="fam">Hanken Grotesk · 400 / 500 / 600</span></div>
+    <div class="spec-body">Every day, buyers ask AI which brands deserve consideration. AVT shows whether the answer includes you — across four engines, over time, against your competitors.</div>
+  </div>
+  <div class="typecard">
+    <div class="role"><span class="n">Mono / Data</span><span class="fam">JetBrains Mono · 400 / 500</span></div>
+    <div class="spec-mono">SoV 42.8%&nbsp;&nbsp;·&nbsp;&nbsp;CI ±3.1&nbsp;&nbsp;·&nbsp;&nbsp;▲ 6.2 pts&nbsp;&nbsp;·&nbsp;&nbsp;p&lt;.05</div>
+  </div>
+
+  <div class="typecard">
+    <div class="role"><span class="n">Type ramp</span><span class="fam">size / line-height / weight</span></div>
+    <div class="ramp">
+      <div class="r"><div class="tag">H1 · 44/1.05/600</div><h1 class="d" style="font-weight:600">Is your brand in the answer?</h1></div>
+      <div class="r"><div class="tag">H2 · 30/1.1/600</div><h2 class="d" style="font-weight:600">Competitor share of voice</h2></div>
+      <div class="r"><div class="tag">H3 · 22/1.2/600</div><h3 class="d" style="font-weight:600">Citations by source</h3></div>
+      <div class="r"><div class="tag">Body · 16/1.55/400</div><div class="b">Track how often each engine mentions you, which sources it cites, and where a competitor is winning the recommendation instead.</div></div>
+      <div class="r"><div class="tag">Label · 13/1.3/600</div><div class="lab">Mention present</div></div>
+      <div class="r"><div class="tag">Caption · 12.5/1.4/400</div><div class="cap">Updated 4h ago · 240 prompts · 4 engines</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. LOGO -->
+<section id="logo">
+  <div class="eyebrow">03 — Identity</div>
+  <h2 class="sec-h">Logo &amp; mark</h2>
+  <p class="sec-sub">The symbol is an aperture with a data-point at center: visibility (a lens / eye) plus a single measured value. It survives to 32px and reads in one color. It carries no letters, so the wordmark can be renamed independently.</p>
+
+  <div class="logo-grid">
+    <div>
+      <div class="logo-cell light">
+        <svg width="72" height="72" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="var(--iris)"/><circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="#fff"/></svg>
+      </div><div class="cell-cap">Primary · on light</div>
+    </div>
+    <div>
+      <div class="logo-cell dark">
+        <svg width="72" height="72" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#fff"/><circle cx="16" cy="16" r="7.5" stroke="var(--ink)" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="var(--ink)"/></svg>
+      </div><div class="cell-cap">White · on ink</div>
+    </div>
+    <div>
+      <div class="logo-cell light">
+        <svg width="72" height="72" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="none" stroke="var(--ink)" stroke-width="1.5"/><circle cx="16" cy="16" r="7.5" stroke="var(--ink)" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="var(--ink)"/></svg>
+      </div><div class="cell-cap">Mono / black</div>
+    </div>
+  </div>
+
+  <div class="grp-label">Lockups</div>
+  <div class="lockups">
+    <div class="lockup">
+      <div style="display:flex; align-items:center; gap:14px">
+        <svg width="44" height="44" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="var(--iris)"/><circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="#fff"/></svg>
+        <span class="wordmark" style="font-size:34px">AVT</span>
+      </div>
+    </div>
+    <div class="lockup">
+      <div style="display:flex; flex-direction:column; align-items:center; gap:12px">
+        <svg width="44" height="44" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="var(--iris)"/><circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="#fff"/></svg>
+        <span class="wordmark" style="font-size:26px">AVT</span>
+      </div>
+    </div>
+  </div>
+  <p class="cell-cap" style="text-align:left; margin-top:10px">Horizontal — nav, README, email headers. &nbsp;·&nbsp; Stacked — OG, marketing, app splash.</p>
+
+  <div class="grp-label">Icon export sizes</div>
+  <div class="icon-sizes">
+    <div class="u"><svg width="64" height="64" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="var(--iris)"/><circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="#fff"/></svg><div class="cap">512 / 192<br>PWA · OG fallback</div></div>
+    <div class="u"><svg width="40" height="40" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="var(--iris)"/><circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="#fff"/></svg><div class="cap">40<br>sidebar</div></div>
+    <div class="u"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="var(--iris)"/><circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2.2"/><circle cx="16" cy="16" r="2.6" fill="#fff"/></svg><div class="cap">32<br>favicon</div></div>
+    <div class="u"><svg width="16" height="16" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="var(--iris)"/><circle cx="16" cy="16" r="8" stroke="#fff" stroke-width="3"/><circle cx="16" cy="16" r="3" fill="#fff"/></svg><div class="cap">16<br>tab</div></div>
+  </div>
+</section>
+
+<!-- 4. ICONS -->
+<section id="icons">
+  <div class="eyebrow">04 — Components</div>
+  <h2 class="sec-h">Icon set</h2>
+  <p class="sec-sub">One outline family. 24px grid, 1.75 stroke, round caps and joins. Drawn on <span class="mono">currentColor</span> so status colors come from context.</p>
+
+  <div class="iconset">
+    <h4>Product / nav</h4>
+    <div class="icon-grid">
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span class="nm">Overview</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V11"/><path d="M10 20V5"/><path d="M16 20v-8"/><path d="M20 20H3"/></svg><span class="nm">Competitors</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 4H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h4v4l5-4h7a1 1 0 0 0 1-1V5a1 1 0 0 0-1-1Z"/></svg><span class="nm">Prompts</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a4 4 0 0 0 5.66 0l3-3a4 4 0 0 0-5.66-5.66l-1.1 1.1"/><path d="M14 11a4 4 0 0 0-5.66 0l-3 3A4 4 0 0 0 11 19.66l1.1-1.1"/></svg><span class="nm">Citations</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10.5 20a2 2 0 0 0 3 0"/></svg><span class="nm">Alerts</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h10"/><path d="M18 7h2"/><circle cx="16" cy="7" r="2"/><path d="M4 17h6"/><path d="M14 17h6"/><circle cx="12" cy="17" r="2"/></svg><span class="nm">Settings</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 5 6v5c0 4 3 7 7 9 4-2 7-5 7-9V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg><span class="nm">Admin</span></div>
+    </div>
+  </div>
+
+  <div class="iconset">
+    <h4>Actions</h4>
+    <div class="icon-grid">
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg><span class="nm">Add</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m4 12 5 5L20 6"/></svg><span class="nm">Check</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6 6 18"/></svg><span class="nm">Close</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="nm">Chevron</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M5 21h14"/></svg><span class="nm">Download</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg><span class="nm">Email</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="12" r="2.5"/><circle cx="17" cy="6" r="2.5"/><circle cx="17" cy="18" r="2.5"/><path d="m8.2 10.8 6.6-3.6M8.2 13.2l6.6 3.6"/></svg><span class="nm">Share</span></div>
+      <div class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg><span class="nm">Search</span></div>
+    </div>
+  </div>
+
+  <div class="iconset">
+    <h4>Status — colored by context</h4>
+    <div class="icon-grid">
+      <div class="ic win"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 17 14 9"/><path d="M9 8h6v6"/></svg><span class="nm">Win</span></div>
+      <div class="ic lose"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8 14 16"/><path d="M15 16H9v-6"/></svg><span class="nm">Lose</span></div>
+      <div class="ic sig"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v16M4 12h16M6.3 6.3l11.4 11.4M17.7 6.3 6.3 17.7"/></svg><span class="nm">Significant</span></div>
+      <div class="ic present"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="2.5" fill="currentColor" stroke="none"/></svg><span class="nm">Present</span></div>
+      <div class="ic absent"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8" stroke-dasharray="2 3"/></svg><span class="nm">Absent</span></div>
+      <div class="ic supp"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4 20 20"/><path d="M9.5 5.4A9.8 9.8 0 0 1 12 5c6.5 0 10 7 10 7a15 15 0 0 1-2.4 3.2"/><path d="M6.2 7.2A15 15 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 3.3-.6"/></svg><span class="nm">Suppressed</span></div>
+    </div>
+  </div>
+
+  <div class="iconset">
+    <h4>Model badges — letter marks (no trademarked logos)</h4>
+    <div class="model-badges">
+      <div class="mb"><div class="badge" style="background:var(--m-openai)">O</div><span class="nm">OpenAI</span></div>
+      <div class="mb"><div class="badge" style="background:var(--m-claude)">C</div><span class="nm">Claude</span></div>
+      <div class="mb"><div class="badge" style="background:var(--m-gemini)">G</div><span class="nm">Gemini</span></div>
+      <div class="mb"><div class="badge" style="background:var(--m-perplexity)">P</div><span class="nm">Perplexity</span></div>
+    </div>
+    <div class="note" style="margin-top:20px">Letter badges sidestep the licensing mess of official model logos while keeping each engine colour-coded. Swap for real marks later if you clear usage.</div>
+  </div>
+</section>
+
+<!-- 5. INDUSTRY -->
+<section id="industry">
+  <div class="eyebrow">05 — Components</div>
+  <h2 class="sec-h">Industry icons</h2>
+  <p class="sec-sub">18 verticals. Rounded-square tile plus one simple glyph, with five background tints rotating across the set so a long list stays scannable.</p>
+  <div class="ind-grid" id="indGrid"></div>
+</section>
+
+<!-- 6. OG + FAVICON -->
+<section id="social">
+  <div class="eyebrow">06 — Marketing</div>
+  <h2 class="sec-h">OG &amp; favicon</h2>
+  <p class="sec-sub">One social template, 1200×630, with slots for the brand and the headline score. Your code already generates OG images — this gives the art to drop in.</p>
+
+  <div class="og-wrap">
+    <div class="og">
+      <div class="glow"></div>
+      <div class="top">
+        <svg width="40" height="40" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="#fff"/><circle cx="16" cy="16" r="7.5" stroke="var(--ink)" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="var(--ink)"/></svg>
+        <span class="wm2">AVT</span>
+      </div>
+      <h3 class="ogt">How often does AI recommend Notion?</h3>
+      <div class="score">
+        <span class="big">42.8%</span>
+        <span class="lbl">share of answer · 4 engines</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grp-label">Favicon pack</div>
+  <div class="fav-row">
+    <div class="u"><svg width="48" height="48" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="8" fill="var(--iris)"/><circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2"/><circle cx="16" cy="16" r="2.4" fill="#fff"/></svg><div class="cap">apple-touch<br>180×180</div></div>
+    <div class="u"><svg width="32" height="32" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="7" fill="var(--iris)"/><circle cx="16" cy="16" r="7.5" stroke="#fff" stroke-width="2.2"/><circle cx="16" cy="16" r="2.6" fill="#fff"/></svg><div class="cap">favicon<br>32×32</div></div>
+    <div class="u"><svg width="16" height="16" viewBox="0 0 32 32" fill="none"><rect width="32" height="32" rx="6" fill="var(--iris)"/><circle cx="16" cy="16" r="8" stroke="#fff" stroke-width="3"/><circle cx="16" cy="16" r="3" fill="#fff"/></svg><div class="cap">favicon.ico<br>16×16</div></div>
+  </div>
+</section>
+
+<!-- 7. MOTION / SPACING -->
+<section id="motion">
+  <div class="eyebrow">07 — Rules</div>
+  <h2 class="sec-h">Motion &amp; spacing</h2>
+  <p class="sec-sub">The lightweight one-pager: enough to keep the build consistent without a spec doc.</p>
+
+  <div class="mo-grid">
+    <div class="mo">
+      <h4>Corner radius</h4>
+      <div class="radii">
+        <div><div class="rr" style="border-radius:8px"></div><div class="cap">8 · sm</div></div>
+        <div><div class="rr" style="border-radius:12px"></div><div class="cap">12 · md</div></div>
+        <div><div class="rr" style="border-radius:16px"></div><div class="cap">16 · lg</div></div>
+        <div><div class="rr" style="border-radius:999px"></div><div class="cap">full · pill</div></div>
+      </div>
+    </div>
+
+    <div class="mo">
+      <h4>Shadow — one soft elevation</h4>
+      <div class="shadow-demo">cards use this, or nothing</div>
+      <div class="row" style="margin-top:14px"><span>card</span><span class="v">0 1 2 / 0 4 16</span></div>
+      <div class="row"><span>opacity</span><span class="v">.04 / .05</span></div>
+    </div>
+
+    <div class="mo">
+      <h4>Button heights</h4>
+      <div class="btns" style="flex-direction:column; align-items:flex-start; gap:10px">
+        <button class="btn primary h-lg">Run visibility report</button>
+        <button class="btn secondary h-md">Add competitor</button>
+        <button class="btn secondary h-sm">Export</button>
+      </div>
+      <div class="row" style="margin-top:14px"><span>lg / md / sm</span><span class="v">44 / 38 / 32</span></div>
+    </div>
+
+    <div class="mo">
+      <h4>Focus ring</h4>
+      <div class="btns"><button class="btn primary h-md focus">Focused</button></div>
+      <div class="row" style="margin-top:14px"><span>ring</span><span class="v">3px wash + 1px iris</span></div>
+      <div class="row"><span>never</span><span class="v">outline:none alone</span></div>
+    </div>
+
+    <div class="mo">
+      <h4>Motion specs</h4>
+      <div class="row"><span>Page enter</span><span class="v">160ms fade+4px up</span></div>
+      <div class="row"><span>Step progress</span><span class="v">240ms ease-out</span></div>
+      <div class="row"><span>Chart load</span><span class="v">bars grow 400ms stagger 40</span></div>
+      <div class="row"><span>Reduced motion</span><span class="v">honor prefers-*</span></div>
+    </div>
+
+    <div class="mo">
+      <h4>Priority to build</h4>
+      <div class="row"><span>1 · Palette + type</span><span class="v">done</span></div>
+      <div class="row"><span>2 · Mark + wordmark</span><span class="v">done</span></div>
+      <div class="row"><span>3 · Nav + status icons</span><span class="v">done</span></div>
+      <div class="row"><span>4 · Industry icons</span><span class="v">done</span></div>
+      <div class="row"><span>5 · OG + favicon</span><span class="v">done</span></div>
+      <div class="row"><span>6 · Onboarding art</span><span class="v">next</span></div>
+    </div>
+  </div>
+  <div class="note"><b>Section 6 (onboarding &amp; empty states)</b> is the one deliverable I left as a stub — those want a couple of real dashboard mocks to sit behind them, which is a better second pass once you lock the tokens above.</div>
+</section>
+
+</main>
+</div>
+
+<script>
+// Industry icons: 18 verticals, glyph + rotating tint
+const stroke='fill="none" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"';
+const industries=[
+  ['CPG', `<rect x="4" y="7" width="16" height="13" rx="1.5"/><path d="M4 10h16M9 7V5h6v2"/>`],
+  ['Financial Services', `<path d="M4 10 12 4l8 6"/><path d="M5 10v9M19 10v9M9 10v9M15 10v9"/><path d="M3 20h18"/>`],
+  ['Retail', `<path d="M6 8h12l-1 12H7L6 8Z"/><path d="M9 8a3 3 0 0 1 6 0"/>`],
+  ['Media & Entertainment', `<circle cx="12" cy="12" r="8"/><path d="M10 9l5 3-5 3V9Z" fill="currentColor" stroke="none"/>`],
+  ['Technology', `<rect x="7" y="7" width="10" height="10" rx="1.5"/><path d="M10 4v3M14 4v3M10 17v3M14 17v3M4 10h3M4 14h3M17 10h3M17 14h3"/>`],
+  ['Hospitality', `<path d="M4 18v-6a2 2 0 0 1 2-2h8a4 4 0 0 1 4 4v4"/><path d="M4 15h16M4 18v1M20 18v1"/><path d="M7 10V8h4v2"/>`],
+  ['QSRs & Restaurants', `<path d="M7 3v7M5 3v4a2 2 0 0 0 4 0V3M7 10v11"/><path d="M16 3c-2 1-2 5-2 7h4V3h-2Z"/><path d="M16 10v11"/>`],
+  ['Home Services', `<path d="M4 11 12 4l8 7"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/>`],
+  ['Alcohol & Spirits', `<path d="M6 4h12l-5 7v6"/><path d="M9 20h8"/><path d="M13 17v3"/>`],
+  ['Consumer Electronics', `<rect x="8" y="3" width="8" height="18" rx="2"/><path d="M11 18h2"/>`],
+  ['Gaming', `<path d="M8 9h8a4 4 0 0 1 4 4l-1 3a2.5 2.5 0 0 1-4 1l-1-2H10l-1 2a2.5 2.5 0 0 1-4-1l-1-3a4 4 0 0 1 4-4Z"/><path d="M7 13h2M8 12v2"/><circle cx="15.5" cy="12.5" r=".6" fill="currentColor" stroke="none"/><circle cx="17" cy="14" r=".6" fill="currentColor" stroke="none"/>`],
+  ['Fitness', `<path d="M4 9v6M7 7v10M17 7v10M20 9v6M7 12h10"/>`],
+  ['Insurance', `<path d="M12 3s7 2 7 4v5c0 4-3 7-7 8-4-1-7-4-7-8V7c0-2 7-4 7-4Z"/>`],
+  ['Sports', `<circle cx="12" cy="12" r="8"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3M7 7l2 2M17 7l-2 2M7 17l2-2M17 17l-2-2"/>`],
+  ['Betting & Prediction', `<rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="15" r="1.1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none"/>`],
+  ['Beauty & Personal Care', `<path d="M12 4c3 5 5 7 5 10a5 5 0 0 1-10 0c0-3 2-5 5-10Z"/>`],
+  ['Education', `<path d="M12 5 3 9l9 4 9-4-9-4Z"/><path d="M7 11v4c0 1.5 2.5 3 5 3s5-1.5 5-3v-4"/>`],
+  ['Other', `<circle cx="6" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="12" r="1.4" fill="currentColor" stroke="none"/>`],
+];
+const tints=[['var(--t1)','var(--t1i)'],['var(--t2)','var(--t2i)'],['var(--t3)','var(--t3i)'],['var(--t4)','var(--t4i)'],['var(--t5)','var(--t5i)']];
+const grid=document.getElementById('indGrid');
+industries.forEach((ind,i)=>{
+  const [bg,fg]=tints[i%5];
+  grid.insertAdjacentHTML('beforeend',
+    `<div class="ind"><div class="tile" style="background:${bg}"><svg width="24" height="24" viewBox="0 0 24 24" stroke="${fg}" ${stroke}>${ind[1]}</svg></div><div class="nm">${ind[0]}</div></div>`);
+});
+
+// tap-to-copy hex
+document.querySelectorAll('.hex').forEach(el=>{
+  el.addEventListener('click',()=>{
+    navigator.clipboard?.writeText(el.textContent.trim());
+    const o=el.textContent; el.textContent='copied'; setTimeout(()=>el.textContent=o,900);
+  });
+});
+</script>
+</body>
+</html>

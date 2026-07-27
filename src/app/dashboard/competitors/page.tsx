@@ -18,12 +18,12 @@ export default function CompetitorsPage() {
   return (
     <main className="mx-auto max-w-6xl space-y-6 px-4 py-8 md:px-6">
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Competitors</h1>
-        <p className="text-sm text-zinc-500">
+        <h1 className="text-2xl font-semibold text-ink">Competitors</h1>
+        <p className="text-sm text-ink-muted">
           Category overlay for {data.trackedBrand}. Scores are fixture-based.
         </p>
       </div>
-      <section className="rounded-lg border border-zinc-200 bg-white p-6">
+      <section className="rounded-lg border border-border bg-surface p-6">
         <CompetitorOverlayChart
           data={data.competitors.map((c) => ({
             brand: c.brand,
@@ -34,7 +34,7 @@ export default function CompetitorsPage() {
           }))}
         />
         <table className="mt-6 w-full text-left text-sm">
-          <thead className="text-xs uppercase text-zinc-500">
+          <thead className="text-xs uppercase text-ink-muted">
             <tr>
               <th className="py-2">Brand</th>
               <th>Score</th>
@@ -44,7 +44,7 @@ export default function CompetitorsPage() {
           </thead>
           <tbody>
             {data.competitors.map((c) => (
-              <tr key={c.brand} className="border-t border-zinc-100">
+              <tr key={c.brand} className="border-t border-border">
                 <td className="py-2 font-medium">
                   {c.brand}
                   {c.brand === data.trackedBrand && (
@@ -53,7 +53,7 @@ export default function CompetitorsPage() {
                 </td>
                 <td>{c.overallScore}</td>
                 <td>{(c.mentionRate * 100).toFixed(1)}%</td>
-                <td className="text-zinc-500">
+                <td className="text-ink-muted">
                   {(c.ciLow * 100).toFixed(1)}–{(c.ciHigh * 100).toFixed(1)}%
                 </td>
               </tr>

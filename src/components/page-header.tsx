@@ -1,5 +1,6 @@
+import { BrandMark, DemoBadge } from "@/components/brand";
+import { IconAbsent } from "@/components/icons";
 import Link from "next/link";
-import { DemoBadge } from "@/components/brand";
 
 export function PageHeader({
   title,
@@ -28,15 +29,24 @@ export function PageHeader({
 
 export function EmptyWorkspace({
   message = "Finish onboarding to personalize this view.",
+  title = "No workspace yet",
 }: {
   message?: string;
+  title?: string;
 }) {
   return (
-    <div className="rounded-xl border border-dashed border-border bg-surface p-10 text-center">
-      <p className="text-sm text-ink-muted">{message}</p>
+    <div className="rounded-[16px] border border-dashed border-border-strong bg-surface p-10 text-center card-shadow">
+      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-[12px] bg-surface-muted text-ink-muted">
+        <IconAbsent size={22} />
+      </div>
+      <div className="mb-3 flex justify-center">
+        <BrandMark href={null} size={28} />
+      </div>
+      <h2 className="font-display text-lg font-semibold text-ink">{title}</h2>
+      <p className="mx-auto mt-1 max-w-sm text-sm text-ink-muted">{message}</p>
       <Link
         href="/onboarding"
-        className="mt-4 inline-block rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
+        className="mt-5 inline-flex h-btn-md items-center rounded-[8px] bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
       >
         Start setup
       </Link>
@@ -54,9 +64,9 @@ export function KpiStrip({
       {items.map((item) => (
         <div
           key={item.label}
-          className="rounded-xl border border-border bg-surface px-4 py-3"
+          className="rounded-[12px] border border-border bg-surface px-4 py-3 card-shadow"
         >
-          <p className="text-[11px] uppercase tracking-wide text-ink-muted">
+          <p className="font-mono text-[11px] uppercase tracking-wide text-ink-muted">
             {item.label}
           </p>
           <p className="mt-1 text-2xl font-semibold tabular-nums text-ink">

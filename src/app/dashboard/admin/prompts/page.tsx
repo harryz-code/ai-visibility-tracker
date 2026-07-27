@@ -5,6 +5,7 @@ import {
   generatePromptCorpus,
   suggestedCompetitors,
 } from "@/lib/demo/generator";
+import { IconDownload } from "@/components/icons";
 import { loadWorkspace, saveWorkspace } from "@/lib/workspace/storage";
 import {
   resolveCategoryLabel,
@@ -80,10 +81,10 @@ export default function AdminPromptsPage() {
     <main className="mx-auto max-w-6xl space-y-6 px-4 py-8 md:px-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-semibold text-zinc-900">
+          <h1 className="text-2xl font-semibold text-ink">
             Prompt corpus
           </h1>
-          <p className="text-sm text-zinc-500">
+          <p className="text-sm text-ink-muted">
             Fixture generator — no LLM. Intent mix matches the methodology.
           </p>
         </div>
@@ -98,24 +99,37 @@ export default function AdminPromptsPage() {
           <button
             type="button"
             onClick={download}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium hover:bg-zinc-50"
+            className="inline-flex h-btn-md items-center gap-1.5 rounded-lg border border-border-strong px-4 text-sm font-medium hover:bg-surface-muted"
           >
+            <IconDownload size={16} />
             Download JSON
           </button>
         </div>
       </div>
-      {msg && <p className="text-sm text-emerald-600">{msg}</p>}
+      {msg && <p className="text-sm text-success">{msg}</p>}
       {ws.prompts.length === 0 ? (
-        <p className="rounded-lg border border-dashed border-zinc-300 bg-white p-8 text-center text-sm text-zinc-500">
-          No prompts yet. Run onboarding or click Regenerate.
-        </p>
+        <div className="rounded-[16px] border border-dashed border-border-strong bg-surface p-10 text-center card-shadow">
+          <p className="font-display text-lg font-semibold text-ink">
+            No prompts yet
+          </p>
+          <p className="mt-1 text-sm text-ink-muted">
+            Run onboarding or click Regenerate to build a fixture corpus.
+          </p>
+          <button
+            type="button"
+            onClick={regenerate}
+            className="mt-5 inline-flex h-btn-md items-center rounded-[8px] bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
+          >
+            Regenerate
+          </button>
+        </div>
       ) : (
         Object.entries(byIntent).map(([intent, list]) => (
           <section
             key={intent}
-            className="rounded-lg border border-zinc-200 bg-white p-4"
+            className="rounded-lg border border-border bg-surface p-4"
           >
-            <h2 className="mb-3 text-sm font-semibold capitalize text-zinc-800">
+            <h2 className="mb-3 text-sm font-semibold capitalize text-ink">
               {intent.replaceAll("_", " ")} ({list.filter((p) => p.selected).length}/
               {list.length} active)
             </h2>
@@ -125,7 +139,7 @@ export default function AdminPromptsPage() {
                   key={p.id}
                   className="flex items-start justify-between gap-3 text-sm"
                 >
-                  <span className={p.selected ? "text-zinc-800" : "text-zinc-400 line-through"}>
+                  <span className={p.selected ? "text-ink" : "text-ink-muted line-through"}>
                     {p.text}
                   </span>
                   <button

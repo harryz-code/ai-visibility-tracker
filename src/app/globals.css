@@ -1,40 +1,64 @@
 @import "tailwindcss";
 
 :root {
-  /* Surfaces */
-  --background: #f7f7f5;
-  --foreground: #141414;
-  --surface: #ffffff;
-  --surface-muted: #f0f0ec;
-  --border: #e4e4e0;
-  --border-strong: #d4d4d0;
+  /* AVT Design System v1 — from public/brand/avt-design-system.html */
 
-  /* Ink */
-  --ink: #141414;
-  --ink-body: #3f3f3a;
-  --ink-muted: #73736c;
-
-  /* Brand primary — swap hex here when assets arrive */
-  --primary: #0b6bcb;
-  --primary-hover: #0958a8;
-  --primary-muted: #e8f2fc;
+  /* Primary (Iris) */
+  --primary: #4a2ce0;
+  --primary-hover: #3a1fc2;
+  --primary-muted: #ece9fd;
+  --primary-muted-2: #f5f3fe;
   --primary-foreground: #ffffff;
 
-  /* Status */
-  --success: #0f7a4a;
-  --success-muted: #e6f6ee;
-  --warn: #b45309;
-  --warn-muted: #fff7ed;
-  --danger: #b42318;
-  --danger-muted: #fef3f2;
+  /* Ink / text */
+  --ink: #16151f;
+  --ink-body: #3b3a47;
+  --ink-muted: #8b8a99;
 
-  /* Chart series (models) */
-  --chart-openai: #141414;
-  --chart-anthropic: #c2410c;
-  --chart-gemini: #2563eb;
-  --chart-perplexity: #0f766e;
-  --chart-grid: #e4e4e0;
-  --chart-axis: #a1a19a;
+  /* Surfaces */
+  --background: #f9f9fc;
+  --foreground: #16151f;
+  --surface: #ffffff;
+  --surface-muted: #f5f3fe;
+  --border: #e9e8f0;
+  --border-strong: #d7d5e2;
+
+  /* Status */
+  --success: #1b9e6b;
+  --success-muted: #e3f6ee;
+  --warn: #e6a700;
+  --warn-muted: #fbf1d6;
+  --danger: #e23d4b;
+  --danger-muted: #fceaec;
+
+  /* Model chart series */
+  --chart-openai: #10a37f;
+  --chart-anthropic: #d97757;
+  --chart-gemini: #3b82f6;
+  --chart-perplexity: #1fa9c0;
+  --chart-you: #4a2ce0;
+  --chart-comp: #9a99a8;
+  --chart-grid: #e9e8f0;
+  --chart-axis: #8b8a99;
+
+  /* Industry tile tints */
+  --tile-1: #ece9fd;
+  --tile-1-ink: #5b3ee6;
+  --tile-2: #e0f4f1;
+  --tile-2-ink: #0f9c7b;
+  --tile-3: #fbf0d8;
+  --tile-3-ink: #c98a06;
+  --tile-4: #fce8ea;
+  --tile-4-ink: #d43a48;
+  --tile-5: #e6f0fd;
+  --tile-5-ink: #2f6fe0;
+
+  /* Radius / shadow */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --shadow-card: 0 1px 2px rgba(22, 21, 31, 0.04),
+    0 4px 16px rgba(22, 21, 31, 0.05);
 }
 
 @theme inline {
@@ -61,26 +85,98 @@
   --color-chart-anthropic: var(--chart-anthropic);
   --color-chart-gemini: var(--chart-gemini);
   --color-chart-perplexity: var(--chart-perplexity);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-hanken);
+  --font-display: var(--font-space);
+  --font-mono: var(--font-jetbrains);
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  color: var(--ink-body);
+  font-family: var(--font-hanken), system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
 }
 
-/* Utility helpers for CTAs until full Tailwind migration */
-.btn-primary {
-  background: var(--primary);
-  color: var(--primary-foreground);
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-space), system-ui, sans-serif;
+  color: var(--ink);
+  letter-spacing: -0.02em;
 }
-.btn-primary:hover {
-  background: var(--primary-hover);
+
+.font-display {
+  font-family: var(--font-space), system-ui, sans-serif;
 }
-.chip-primary {
-  background: var(--primary-muted);
-  color: var(--primary);
-  border-color: color-mix(in srgb, var(--primary) 35%, transparent);
+
+.font-mono,
+.tabular-nums {
+  font-family: var(--font-jetbrains), ui-monospace, monospace;
+}
+
+.card-shadow {
+  box-shadow: var(--shadow-card);
+}
+
+/* DS focus ring — 3px wash + 1px iris */
+.focus-ring:focus-visible {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-muted), 0 0 0 1px var(--primary);
+}
+
+/* Button heights: lg 44 / md 38 / sm 32 */
+.h-btn-lg {
+  height: 44px;
+}
+.h-btn-md {
+  height: 38px;
+}
+.h-btn-sm {
+  height: 32px;
+}
+
+.page-enter {
+  animation: page-enter 160ms ease-out;
+}
+
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.step-progress {
+  transition: width 240ms ease-out;
+}
+
+.chart-bar {
+  transform-origin: bottom;
+  animation: chart-grow 400ms ease-out both;
+}
+
+@keyframes chart-grow {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-enter,
+  .chart-bar,
+  .step-progress {
+    animation: none !important;
+    transition: none !important;
+  }
 }

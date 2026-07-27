@@ -11,6 +11,7 @@ import {
   MentionRateBarChart,
   ScoreTimeseriesChart,
 } from "@/components/charts";
+import { ModelBadge } from "@/components/model-badge";
 import { EmptyWorkspace, KpiStrip, PageHeader } from "@/components/page-header";
 
 export default function DashboardPage() {
@@ -75,8 +76,22 @@ export default function DashboardPage() {
         <ScoreTimeseriesChart data={data.timeseries} />
       </section>
 
-      <section className="rounded-lg border border-border bg-surface p-6">
+      <section className="rounded-[12px] border border-border bg-surface p-6 card-shadow">
         <h2 className="text-lg font-medium text-ink">Mention rate by model</h2>
+        <div className="mb-4 flex flex-wrap gap-3">
+          {data.perModel.map((m) => (
+            <div
+              key={m.model}
+              className="inline-flex items-center gap-2 rounded-full border border-border px-2.5 py-1 text-sm"
+            >
+              <ModelBadge model={m.model} />
+              <span className="capitalize text-ink-muted">{m.model}</span>
+              <span className="tabular-nums font-medium text-ink">
+                {(m.mentionRate * 100).toFixed(0)}%
+              </span>
+            </div>
+          ))}
+        </div>
         <MentionRateBarChart data={data.perModel} />
       </section>
 

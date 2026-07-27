@@ -13,9 +13,18 @@ export default async function OgImage({ params }: Props) {
   const report =
     getReportMemory(slug) ??
     buildReportPayload(
-      slug.split("-")[0] ? capitalize(slug.split("-")[0]) : "Affirm",
-      "BNPL",
+      slug.split("-")[0] ? capitalize(slug.split("-")[0]) : "Brand",
+      "Financial Services",
     );
+
+  const ratePct =
+    report.perModel.length > 0
+      ? (
+          (report.perModel.reduce((s, m) => s + m.mentionRate, 0) /
+            report.perModel.length) *
+          100
+        ).toFixed(1)
+      : String(report.overallScore);
 
   return new ImageResponse(
     (
@@ -27,28 +36,103 @@ export default async function OgImage({ params }: Props) {
           flexDirection: "column",
           justifyContent: "space-between",
           padding: 64,
-          background: "linear-gradient(145deg, #fafafa 0%, #e4e4e7 100%)",
-          color: "#18181b",
+          background: "#16151F",
+          color: "#fff",
           fontFamily: "sans-serif",
+          position: "relative",
+          overflow: "hidden",
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          <div style={{ fontSize: 28, letterSpacing: 4, color: "#71717a" }}>
+        <div
+          style={{
+            position: "absolute",
+            right: -80,
+            top: -80,
+            width: 360,
+            height: 360,
+            borderRadius: "50%",
+            background:
+              "radial-gradient(circle, rgba(74,44,224,0.55), transparent 70%)",
+          }}
+        />
+        <div style={{ display: "flex", flexDirection: "column", gap: 28 }}>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 14,
+              fontSize: 24,
+              fontWeight: 600,
+              letterSpacing: "-0.03em",
+            }}
+          >
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 10,
+                background: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <div
+                style={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: "50%",
+                  border: "2.5px solid #16151F",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <div
+                  style={{
+                    width: 6,
+                    height: 6,
+                    borderRadius: "50%",
+                    background: "#16151F",
+                  }}
+                />
+              </div>
+            </div>
             AVT
           </div>
-          <div style={{ fontSize: 56, fontWeight: 700 }}>
-            {report.brandName}
-          </div>
-          <div style={{ fontSize: 28, color: "#52525b" }}>
-            AI Visibility in {report.categoryName}
+          <div
+            style={{
+              fontSize: 44,
+              fontWeight: 600,
+              lineHeight: 1.15,
+              maxWidth: 820,
+              letterSpacing: "-0.02em",
+            }}
+          >
+            How often does AI recommend {report.brandName}?
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "flex-end", gap: 24 }}>
-          <div style={{ fontSize: 96, fontWeight: 700, lineHeight: 1 }}>
-            {report.overallScore}
+        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+          <div
+            style={{
+              fontSize: 84,
+              fontWeight: 500,
+              lineHeight: 1,
+              fontFamily: "monospace",
+            }}
+          >
+            {ratePct}%
           </div>
-          <div style={{ fontSize: 24, color: "#52525b", paddingBottom: 16 }}>
-            Visibility score · Wilson 95% CIs
+          <div
+            style={{
+              fontSize: 14,
+              letterSpacing: "0.14em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.55)",
+              fontFamily: "monospace",
+            }}
+          >
+            Share of answer · 4 engines · {report.categoryName}
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { IconDownload, IconEmail, IconShare } from "@/components/icons";
 
 const GATE_KEY = "avt.report.gate.dismissed";
 
@@ -90,40 +91,31 @@ export function ReportGate({
     URL.revokeObjectURL(url);
   }
 
+  const btn =
+    "inline-flex h-btn-sm items-center gap-1.5 rounded-lg border border-border bg-surface px-3 text-sm hover:bg-surface-muted";
+
   return (
     <>
       <div className="mx-auto flex max-w-6xl flex-wrap justify-end gap-2 px-6 pt-4">
-        <button
-          type="button"
-          onClick={shareLink}
-          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm hover:bg-surface-muted"
-        >
+        <button type="button" onClick={shareLink} className={btn}>
+          <IconShare size={16} />
           Share link
         </button>
-        <button
-          type="button"
-          onClick={() => downloadSummary("md")}
-          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm hover:bg-surface-muted"
-        >
+        <button type="button" onClick={() => downloadSummary("md")} className={btn}>
+          <IconDownload size={16} />
           Download MD
         </button>
-        <button
-          type="button"
-          onClick={() => downloadSummary("json")}
-          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm hover:bg-surface-muted"
-        >
+        <button type="button" onClick={() => downloadSummary("json")} className={btn}>
+          <IconDownload size={16} />
           Download JSON
         </button>
-        <button
-          type="button"
-          onClick={emailPdf}
-          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm hover:bg-surface-muted"
-        >
+        <button type="button" onClick={emailPdf} className={btn}>
+          <IconEmail size={16} />
           Email PDF
         </button>
         <Link
           href="/pricing"
-          className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
+          className="inline-flex h-btn-sm items-center rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
         >
           Track weekly →
         </Link>
@@ -152,11 +144,11 @@ export function ReportGate({
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@company.com"
-              className="mt-4 w-full rounded-xl border border-border px-3 py-2.5 text-sm outline-none focus:border-primary"
+              className="focus-ring mt-4 w-full rounded-xl border border-border px-3 py-2.5 text-sm outline-none focus:border-primary"
             />
             <button
               type="submit"
-              className="mt-4 w-full rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
+              className="mt-4 h-btn-md w-full rounded-xl bg-primary text-sm font-medium text-primary-foreground hover:bg-primary-hover"
             >
               Continue
             </button>

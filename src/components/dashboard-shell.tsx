@@ -4,6 +4,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandMark, DemoBadge } from "@/components/brand";
+import {
+  IconClose,
+  NAV_ICONS,
+} from "@/components/icons";
 import { loadWorkspace } from "@/lib/workspace/storage";
 import {
   resolveCategoryLabel,
@@ -12,13 +16,13 @@ import {
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/dashboard", label: "Overview" },
-  { href: "/dashboard/competitors", label: "Competitors" },
-  { href: "/dashboard/prompts", label: "Prompts" },
-  { href: "/dashboard/citations", label: "Citations" },
-  { href: "/dashboard/alerts", label: "Alerts" },
-  { href: "/dashboard/settings", label: "Settings" },
-  { href: "/dashboard/admin/prompts", label: "Admin" },
+  { href: "/dashboard", label: "Overview" as const },
+  { href: "/dashboard/competitors", label: "Competitors" as const },
+  { href: "/dashboard/prompts", label: "Prompts" as const },
+  { href: "/dashboard/citations", label: "Citations" as const },
+  { href: "/dashboard/alerts", label: "Alerts" as const },
+  { href: "/dashboard/settings", label: "Settings" as const },
+  { href: "/dashboard/admin/prompts", label: "Admin" as const },
 ];
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
@@ -41,18 +45,20 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           item.href === "/dashboard"
             ? pathname === "/dashboard"
             : pathname.startsWith(item.href);
+        const Icon = NAV_ICONS[item.label];
         return (
           <Link
             key={item.href}
             href={item.href}
             onClick={() => setMobileOpen(false)}
             className={cn(
-              "rounded-lg px-3 py-2 text-sm",
+              "flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm",
               active
                 ? "bg-primary-muted font-medium text-primary"
                 : "text-ink-muted hover:bg-surface-muted hover:text-ink",
             )}
           >
+            <Icon size={18} />
             {item.label}
           </Link>
         );
@@ -96,10 +102,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
               <BrandMark size={24} />
               <button
                 type="button"
-                className="text-ink-muted"
+                className="rounded-md p-1 text-ink-muted hover:text-ink"
                 onClick={() => setMobileOpen(false)}
+                aria-label="Close"
               >
-                ✕
+                <IconClose size={18} />
               </button>
             </div>
             {nav}
@@ -112,7 +119,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-3">
             <button
               type="button"
-              className="rounded-md border border-border px-2 py-1 text-sm md:hidden"
+              className="h-btn-sm rounded-md border border-border px-2 text-sm md:hidden"
               onClick={() => setMobileOpen(true)}
             >
               Menu
@@ -133,22 +140,26 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
             </Link>
           </div>
         </header>
-        <div className="flex-1 bg-background pb-14 md:pb-0">{children}</div>
+        <div className="page-enter flex-1 bg-background pb-14 md:pb-0">
+          {children}
+        </div>
         <nav className="fixed bottom-0 left-0 right-0 z-30 flex border-t border-border bg-surface md:hidden">
           {NAV.slice(0, 5).map((item) => {
             const active =
               item.href === "/dashboard"
                 ? pathname === "/dashboard"
                 : pathname.startsWith(item.href);
+            const Icon = NAV_ICONS[item.label];
             return (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex-1 py-2.5 text-center text-[10px]",
+                  "flex flex-1 flex-col items-center gap-0.5 py-2 text-[10px]",
                   active ? "font-medium text-primary" : "text-ink-muted",
                 )}
               >
+                <Icon size={18} />
                 {item.label}
               </Link>
             );

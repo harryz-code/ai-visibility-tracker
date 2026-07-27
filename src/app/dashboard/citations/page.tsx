@@ -17,15 +17,15 @@ export default function CitationsPage() {
   return (
     <main className="mx-auto max-w-6xl space-y-6 px-4 py-8 md:px-6">
       <div>
-        <h1 className="text-2xl font-semibold text-zinc-900">Citations</h1>
-        <p className="text-sm text-zinc-500">
+        <h1 className="text-2xl font-semibold text-ink">Citations</h1>
+        <p className="text-sm text-ink-muted">
           Domains cited across category answers — plus “get cited here”
           recommendations.
         </p>
       </div>
-      <section className="rounded-lg border border-zinc-200 bg-white p-6">
+      <section className="rounded-lg border border-border bg-surface p-6">
         <table className="w-full text-left text-sm">
-          <thead className="text-xs uppercase text-zinc-500">
+          <thead className="text-xs uppercase text-ink-muted">
             <tr>
               <th className="py-2">Domain</th>
               <th>Share</th>
@@ -35,11 +35,11 @@ export default function CitationsPage() {
           </thead>
           <tbody>
             {data.citationIntel.map((c) => (
-              <tr key={c.domain} className="border-t border-zinc-100">
+              <tr key={c.domain} className="border-t border-border">
                 <td className="py-3 font-medium">{c.domain}</td>
                 <td>{(c.share * 100).toFixed(0)}%</td>
-                <td className="text-zinc-500">{c.count}</td>
-                <td className="text-zinc-600">{c.recommendation}</td>
+                <td className="text-ink-muted">{c.count}</td>
+                <td className="text-ink-body">{c.recommendation}</td>
               </tr>
             ))}
           </tbody>

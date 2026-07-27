@@ -16,7 +16,7 @@ export function CategorySelect({ value, otherValue = "", onChange, id }: Props) 
     <div className="space-y-2">
       <select
         id={id}
-        className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-primary"
+        className="w-full rounded-xl border border-border px-3 py-2.5 text-sm outline-none focus:border-primary"
         value={isOther || value === OTHER_CATEGORY ? OTHER_CATEGORY : value}
         onChange={(e) => {
           const next = e.target.value;
@@ -32,7 +32,7 @@ export function CategorySelect({ value, otherValue = "", onChange, id }: Props) 
       </select>
       {isOther && (
         <input
-          className="w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-primary"
+          className="w-full rounded-xl border border-border px-3 py-2.5 text-sm outline-none focus:border-primary"
           placeholder="Describe your industry…"
           value={otherValue}
           onChange={(e) => onChange(OTHER_CATEGORY, e.target.value)}

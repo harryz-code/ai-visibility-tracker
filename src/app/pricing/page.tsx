@@ -19,18 +19,18 @@ export default function PricingPage() {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-5xl px-6 py-16">
+      <main className="page-enter mx-auto max-w-5xl px-6 py-16">
         <div className="max-w-2xl">
           <h1 className="text-3xl font-semibold tracking-tight text-ink">
             Pricing
           </h1>
           <p className="mt-2 text-ink-body">
-            Self-serve plans for ongoing AI visibility tracking. Checkout is
-            stubbed in this demo — use onboarding to explore the product.
+            Self-serve plans for ongoing AI visibility tracking. Billing is not
+            wired in this demo — explore the product via setup.
           </p>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-2xl border border-border bg-surface p-8">
+          <div className="rounded-[16px] border border-border bg-surface p-8 card-shadow">
             <h2 className="text-xl font-semibold text-ink">Solo</h2>
             <p className="mt-2 text-3xl font-semibold text-ink">
               $99
@@ -38,23 +38,26 @@ export default function PricingPage() {
             </p>
             <Link
               href="/onboarding"
-              className="mt-8 inline-block w-full rounded-xl bg-ink py-3 text-center text-sm font-medium text-primary-foreground hover:opacity-90"
+              className="mt-8 inline-flex h-btn-lg w-full items-center justify-center rounded-[8px] bg-ink text-sm font-semibold text-primary-foreground hover:opacity-90"
             >
-              Start setup
+              Explore demo
             </Link>
           </div>
-          <div className="rounded-2xl border border-primary/40 bg-primary-muted p-8">
+          <div className="rounded-[16px] border border-primary/40 bg-primary-muted p-8 card-shadow">
             <h2 className="text-xl font-semibold text-ink">Team</h2>
             <p className="mt-2 text-3xl font-semibold text-ink">
               $299
               <span className="text-base font-normal text-ink-muted">/mo</span>
             </p>
-            <button
-              type="button"
-              className="mt-8 w-full rounded-xl bg-primary py-3 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
+            <Link
+              href="/onboarding"
+              className="mt-8 inline-flex h-btn-lg w-full items-center justify-center rounded-[8px] bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
             >
-              Coming soon — Stripe stub
-            </button>
+              Explore demo
+            </Link>
+            <p className="mt-2 text-center text-xs text-ink-muted">
+              Checkout later — demo uses local fixtures
+            </p>
           </div>
         </div>
         <table className="mt-12 w-full text-left text-sm">
@@ -68,9 +71,9 @@ export default function PricingPage() {
           <tbody>
             {ROWS.map(([f, s, t]) => (
               <tr key={f} className="border-t border-border">
-                <td className="py-3 font-medium text-ink">{f}</td>
-                <td className="text-ink-body">{s}</td>
-                <td className="text-ink-body">{t}</td>
+                <td className="py-3 text-ink">{f}</td>
+                <td>{s}</td>
+                <td>{t}</td>
               </tr>
             ))}
           </tbody>

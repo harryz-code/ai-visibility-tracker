@@ -50,30 +50,37 @@ export function MentionRateBarChart({ data }: { data: ModelMetricPoint[] }) {
     <div className="h-72 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
-          <XAxis dataKey="model" tick={{ fontSize: 11 }} stroke="#a1a1aa" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
+          <XAxis dataKey="model" tick={{ fontSize: 11 }} stroke="var(--chart-axis)" />
           <YAxis
             domain={[0, 100]}
             tick={{ fontSize: 11 }}
-            stroke="#a1a1aa"
+            stroke="var(--chart-axis)"
             unit="%"
           />
           <Tooltip
             formatter={(value) => [`${value}%`, "Mention rate"]}
             labelFormatter={(l) => String(l)}
           />
-          <Bar dataKey="rate" fill="var(--primary)" radius={[4, 4, 0, 0]} name="Mention rate">
+          <Bar
+            dataKey="rate"
+            fill="var(--chart-you)"
+            radius={[4, 4, 0, 0]}
+            name="Mention rate"
+            animationDuration={400}
+            animationBegin={0}
+          >
             <ErrorBar
               dataKey="error"
               direction="y"
               width={4}
               strokeWidth={1.5}
-              stroke="#71717a"
+              stroke="var(--chart-axis)"
             />
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-      <p className="mt-2 text-xs text-zinc-500">
+      <p className="mt-2 text-xs text-ink-muted">
         Whiskers approximate Wilson 95% CI (upper error shown). Rates from multi-sample waves.
       </p>
     </div>
@@ -98,12 +105,18 @@ export function CompetitorOverlayChart({
     <div className="h-72 w-full">
       <ResponsiveContainer width="100%" height="100%">
         <BarChart data={chartData} margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
-          <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" />
-          <XAxis dataKey="brand" tick={{ fontSize: 11 }} stroke="#a1a1aa" />
-          <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} stroke="#a1a1aa" />
+          <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" />
+          <XAxis dataKey="brand" tick={{ fontSize: 11 }} stroke="var(--chart-axis)" />
+          <YAxis domain={[0, 100]} tick={{ fontSize: 11 }} stroke="var(--chart-axis)" />
           <Tooltip />
-          <Bar dataKey="score" fill="#3f3f46" radius={[4, 4, 0, 0]} name="Visibility score">
-            <ErrorBar dataKey="error" direction="y" width={4} strokeWidth={1.5} stroke="#a1a1aa" />
+          <Bar
+            dataKey="score"
+            fill="var(--chart-comp)"
+            radius={[4, 4, 0, 0]}
+            name="Visibility score"
+            animationDuration={400}
+          >
+            <ErrorBar dataKey="error" direction="y" width={4} strokeWidth={1.5} stroke="var(--chart-axis)" />
           </Bar>
         </BarChart>
       </ResponsiveContainer>

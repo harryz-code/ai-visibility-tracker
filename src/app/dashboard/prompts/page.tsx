@@ -8,6 +8,8 @@ import {
   type PromptResultRow,
 } from "@/lib/demo/personalized";
 import { PageHeader } from "@/components/page-header";
+import { IconAbsent, IconClose, IconLose, IconPresent, IconWin } from "@/components/icons";
+import { ModelBadge } from "@/components/model-badge";
 
 export default function PromptsPage() {
   const [data, setData] = useState<PersonalizedDemo | null>(null);
@@ -52,7 +54,7 @@ export default function PromptsPage() {
       />
       <div className="flex flex-wrap gap-3">
         <select
-          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
+          className="focus-ring rounded-lg border border-border bg-surface px-3 py-2 text-sm"
           value={intent}
           onChange={(e) => setIntent(e.target.value)}
         >
@@ -64,7 +66,7 @@ export default function PromptsPage() {
           ))}
         </select>
         <select
-          className="rounded-lg border border-border bg-surface px-3 py-2 text-sm"
+          className="focus-ring rounded-lg border border-border bg-surface px-3 py-2 text-sm"
           value={result}
           onChange={(e) => setResult(e.target.value as typeof result)}
         >
@@ -73,7 +75,7 @@ export default function PromptsPage() {
           <option value="lose">Losses only</option>
         </select>
       </div>
-      <div className="overflow-hidden rounded-lg border border-border bg-surface">
+      <div className="overflow-hidden rounded-[12px] border border-border bg-surface card-shadow">
         <table className="w-full text-left text-sm">
           <thead className="bg-surface-muted text-xs uppercase text-ink-muted">
             <tr>
@@ -101,15 +103,18 @@ export default function PromptsPage() {
                   <span
                     className={
                       p.win
-                        ? "rounded-full bg-success-muted px-2 py-0.5 text-xs text-success"
-                        : "rounded-full bg-danger-muted px-2 py-0.5 text-xs text-danger"
+                        ? "inline-flex items-center gap-1 rounded-full bg-success-muted px-2 py-0.5 text-xs text-success"
+                        : "inline-flex items-center gap-1 rounded-full bg-danger-muted px-2 py-0.5 text-xs text-danger"
                     }
                   >
+                    {p.win ? <IconWin size={14} /> : <IconLose size={14} />}
                     {p.win ? "Win" : "Lose"}
                   </span>
                 </td>
-                <td>{(p.mentionRate * 100).toFixed(0)}%</td>
-                <td className="capitalize">{p.bestModel}</td>
+                <td className="tabular-nums">{(p.mentionRate * 100).toFixed(0)}%</td>
+                <td>
+                  <ModelBadge model={p.bestModel} showLabel />
+                </td>
               </tr>
             ))}
             {filtered.length === 0 && (
@@ -130,10 +135,11 @@ export default function PromptsPage() {
               <h2 className="text-lg font-semibold text-ink">Sample drilldown</h2>
               <button
                 type="button"
-                className="text-ink-muted hover:text-ink"
+                className="rounded-md p-1 text-ink-muted hover:text-ink"
                 onClick={() => setOpen(null)}
+                aria-label="Close"
               >
-                ✕
+                <IconClose size={18} />
               </button>
             </div>
             <p className="mt-2 text-sm text-ink-body">{open.text}</p>
@@ -142,16 +148,23 @@ export default function PromptsPage() {
               {open.samples.map((s) => (
                 <li
                   key={s.model}
-                  className="rounded-lg border border-border p-3"
+                  className="rounded-[12px] border border-border p-3"
                 >
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium capitalize">{s.model}</span>
+                    <ModelBadge model={s.model} showLabel />
                     <span
                       className={
-                        s.mentioned ? "text-success" : "text-ink-muted"
+                        s.mentioned
+                          ? "inline-flex items-center gap-1 text-success"
+                          : "inline-flex items-center gap-1 text-ink-muted"
                       }
                     >
-                      {s.mentioned ? "Mentioned" : "Absent"}
+                      {s.mentioned ? (
+                        <IconPresent size={14} />
+                      ) : (
+                        <IconAbsent size={14} />
+                      )}
+                      {s.mentioned ? "Present" : "Absent"}
                     </span>
                   </div>
                   <p className="mt-2 text-xs italic text-ink-muted">

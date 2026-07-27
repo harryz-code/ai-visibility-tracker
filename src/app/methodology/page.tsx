@@ -69,7 +69,10 @@ export default function MethodologyPage() {
             brand. Comparison and alternative intents may (aided).
           </p>
         </section>
-        <Link href="/onboarding" className="inline-block text-primary hover:underline">
+        <Link
+          href="/onboarding"
+          className="inline-flex h-btn-md items-center rounded-[8px] bg-primary px-4 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
+        >
           Start setup →
         </Link>
       </main>

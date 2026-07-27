@@ -7,21 +7,22 @@ export default function Home() {
       <SiteHeader />
       <main className="relative overflow-hidden">
         <div
-          className="pointer-events-none absolute inset-0 opacity-70"
+          className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 80% 50% at 50% -20%, color-mix(in srgb, var(--primary) 22%, transparent), transparent)",
+              "radial-gradient(ellipse 70% 45% at 70% -10%, rgba(74,44,224,0.18), transparent)",
           }}
         />
-        <div className="relative mx-auto flex min-h-[calc(100vh-65px)] max-w-6xl flex-col justify-center gap-8 px-6 py-16">
-          <div className="max-w-2xl space-y-5">
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
-              AVT
+        <div className="page-enter relative mx-auto flex min-h-[calc(100vh-65px)] max-w-6xl flex-col justify-center gap-8 px-6 py-16">
+          <div className="max-w-3xl space-y-5">
+            <p className="font-mono text-[11.5px] font-medium uppercase tracking-[0.14em] text-primary">
+              AVT · AI Visibility Tracker
             </p>
-            <h1 className="text-4xl font-semibold tracking-tight text-ink sm:text-5xl">
-              Know how AI assistants talk about your brand.
+            <h1 className="font-display text-4xl font-semibold leading-[1.05] tracking-[-0.03em] text-ink sm:text-6xl">
+              Measure where your brand{" "}
+              <span className="text-primary">shows up</span> in AI answers.
             </h1>
-            <p className="text-lg text-ink-body">
+            <p className="max-w-[56ch] text-lg text-ink-body">
               Multi-sample measurement across ChatGPT, Claude, Gemini, and
               Perplexity — with confidence intervals and versioned extraction.
             </p>
@@ -29,19 +30,19 @@ export default function Home() {
           <div className="flex flex-wrap gap-3">
             <Link
               href="/onboarding"
-              className="rounded-md bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
+              className="inline-flex h-btn-lg items-center rounded-[8px] bg-primary px-5 text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
             >
               Start setup
             </Link>
             <Link
               href="/report"
-              className="rounded-md bg-ink px-5 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90"
+              className="inline-flex h-btn-lg items-center rounded-[8px] border border-border-strong bg-surface px-5 text-sm font-semibold text-ink hover:bg-[var(--primary-muted-2)]"
             >
               Get a free report
             </Link>
             <Link
               href="/methodology"
-              className="rounded-md border border-border px-5 py-2.5 text-sm font-medium text-ink hover:bg-surface"
+              className="inline-flex h-btn-lg items-center rounded-[8px] px-5 text-sm font-semibold text-ink-muted hover:text-ink"
             >
               How it works
             </Link>
