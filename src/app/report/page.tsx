@@ -1,4 +1,5 @@
 import { ReportForm } from "@/components/report-form";
+import { SiteHeader } from "@/components/site-header";
 
 export const metadata = {
   title: "Free AI Visibility Report — AVT",
@@ -6,6 +7,8 @@ export const metadata = {
 
 export default function ReportPage() {
   return (
+    <>
+      <SiteHeader />
     <main className="mx-auto max-w-6xl px-6 py-16">
       <div className="mb-10 max-w-2xl space-y-3">
         <p className="text-sm font-medium uppercase tracking-widest text-zinc-500">
@@ -24,5 +27,6 @@ export default function ReportPage() {
         <ReportForm />
       </div>
     </main>
+    </>
   );
 }
