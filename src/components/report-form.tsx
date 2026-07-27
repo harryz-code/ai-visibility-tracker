@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
-import { CategorySelect } from "@/components/category-select";
+import { IndustryGrid } from "@/components/industry-grid";
 import { OTHER_CATEGORY } from "@/lib/workspace/types";
 
 export function ReportForm() {
@@ -63,64 +63,60 @@ export function ReportForm() {
   return (
     <form onSubmit={onSubmit} className="mx-auto max-w-lg space-y-5">
       <div>
-        <label className="block text-sm font-medium text-zinc-700">Brand</label>
+        <label className="block text-sm font-medium text-ink">Brand</label>
         <input
           required
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
           placeholder="Your brand"
-          className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900"
+          className="mt-1 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
         />
       </div>
       <div>
-        <label className="block text-sm font-medium text-zinc-700">
+        <label className="mb-2 block text-sm font-medium text-ink">
           Industry
         </label>
-        <div className="mt-1">
-          <CategorySelect
-            value={category}
-            otherValue={categoryOther}
-            onChange={(c, o = "") => {
-              setCategory(c);
-              setCategoryOther(o);
-            }}
-          />
-        </div>
+        <IndustryGrid
+          value={category}
+          otherValue={categoryOther}
+          onChange={(c, o = "") => {
+            setCategory(c);
+            setCategoryOther(o);
+          }}
+        />
       </div>
       <div>
-        <label className="block text-sm font-medium text-zinc-700">
-          Work email
-        </label>
+        <label className="block text-sm font-medium text-ink">Work email</label>
         <input
           required
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="you@company.com"
-          className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900"
+          className="mt-1 w-full rounded-md border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
         />
       </div>
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-60"
+        className="w-full rounded-md bg-ink px-4 py-2.5 text-sm font-medium text-primary-foreground hover:opacity-90 disabled:opacity-60"
       >
         {pending ? "Running mini-wave…" : "Generate free report"}
       </button>
       {status && (
         <div className="space-y-2">
-          <div className="h-2 overflow-hidden rounded-full bg-zinc-200">
+          <div className="h-2 overflow-hidden rounded-full bg-surface-muted">
             <div
-              className="h-full bg-zinc-900 transition-all duration-300"
+              className="h-full bg-primary transition-all duration-300"
               style={{ width: `${progress}%` }}
             />
           </div>
-          <p className="text-sm text-zinc-600">{status}</p>
+          <p className="text-sm text-ink-body">{status}</p>
         </div>
       )}
-      <p className="text-xs text-zinc-500">
-        Demo runs in fixture mode (~$0). Live waves need model API keys.
-        Limit: 1 report per email per day (stubbed).
+      <p className="text-xs text-ink-muted">
+        Demo runs in fixture mode (~$0). Limit: 1 report per email per day
+        (stubbed).
       </p>
     </form>
   );

@@ -3,15 +3,32 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export function ReportGate({ children }: { children: React.ReactNode }) {
+const GATE_KEY = "avt.report.gate.dismissed";
+
+export function ReportGate({
+  children,
+  brandName,
+  payload,
+}: {
+  children: React.ReactNode;
+  brandName?: string;
+  payload?: Record<string, unknown>;
+}) {
   const [gated, setGated] = useState(false);
   const [email, setEmail] = useState("");
   const [unlocked, setUnlocked] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
 
   useEffect(() => {
+    if (sessionStorage.getItem(GATE_KEY) === "1") {
+      setUnlocked(true);
+    }
+  }, []);
+
+  useEffect(() => {
     function onScroll() {
       if (unlocked || gated) return;
+      if (sessionStorage.getItem(GATE_KEY) === "1") return;
       const el = document.documentElement;
       const pct = (el.scrollTop + window.innerHeight) / el.scrollHeight;
       if (pct >= 0.5) setGated(true);
@@ -20,11 +37,16 @@ export function ReportGate({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, [gated, unlocked]);
 
+  function dismissGate() {
+    sessionStorage.setItem(GATE_KEY, "1");
+    setUnlocked(true);
+    setGated(false);
+  }
+
   function submitEmail(e: React.FormEvent) {
     e.preventDefault();
     if (!email.includes("@")) return;
-    setUnlocked(true);
-    setGated(false);
+    dismissGate();
   }
 
   function emailPdf() {
@@ -32,26 +54,83 @@ export function ReportGate({ children }: { children: React.ReactNode }) {
     setTimeout(() => setToast(null), 3000);
   }
 
+  async function shareLink() {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      setToast("Link copied to clipboard.");
+    } catch {
+      setToast(window.location.href);
+    }
+    setTimeout(() => setToast(null), 2500);
+  }
+
+  function downloadSummary(format: "md" | "json") {
+    if (!payload) {
+      setToast("Nothing to download yet.");
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+    let body = "";
+    let mime = "application/json";
+    let ext = "json";
+    if (format === "json") {
+      body = JSON.stringify(payload, null, 2);
+    } else {
+      mime = "text/markdown";
+      ext = "md";
+      const score = payload.overallScore;
+      body = `# AI Visibility — ${brandName ?? "Brand"}\n\nScore: **${score}**\n\n\`\`\`json\n${JSON.stringify(payload, null, 2)}\n\`\`\`\n`;
+    }
+    const blob = new Blob([body], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `avt-report-${(brandName || "brand").toLowerCase()}.${ext}`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <>
-      <div className="mx-auto flex max-w-6xl justify-end gap-2 px-6 pt-4">
+      <div className="mx-auto flex max-w-6xl flex-wrap justify-end gap-2 px-6 pt-4">
+        <button
+          type="button"
+          onClick={shareLink}
+          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm hover:bg-surface-muted"
+        >
+          Share link
+        </button>
+        <button
+          type="button"
+          onClick={() => downloadSummary("md")}
+          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm hover:bg-surface-muted"
+        >
+          Download MD
+        </button>
+        <button
+          type="button"
+          onClick={() => downloadSummary("json")}
+          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm hover:bg-surface-muted"
+        >
+          Download JSON
+        </button>
         <button
           type="button"
           onClick={emailPdf}
-          className="rounded-lg border border-zinc-300 bg-white px-3 py-1.5 text-sm hover:bg-zinc-50"
+          className="rounded-lg border border-border bg-surface px-3 py-1.5 text-sm hover:bg-surface-muted"
         >
           Email PDF
         </button>
         <Link
           href="/pricing"
-          className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-white hover:bg-primary-hover"
+          className="rounded-lg bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
         >
           Track weekly →
         </Link>
       </div>
       {children}
       {toast && (
-        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-zinc-900 px-4 py-2 text-sm text-white">
+        <div className="fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-lg bg-ink px-4 py-2 text-sm text-primary-foreground">
           {toast}
         </div>
       )}
@@ -59,14 +138,13 @@ export function ReportGate({ children }: { children: React.ReactNode }) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <form
             onSubmit={submitEmail}
-            className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+            className="w-full max-w-md rounded-2xl bg-surface p-6 shadow-xl"
           >
-            <h2 className="text-lg font-semibold text-zinc-900">
+            <h2 className="text-lg font-semibold text-ink">
               Unlock the full report
             </h2>
-            <p className="mt-1 text-sm text-zinc-500">
-              Enter your work email to keep reading (demo gate — nothing is
-              sent).
+            <p className="mt-1 text-sm text-ink-muted">
+              Enter your work email to keep reading (demo — nothing is sent).
             </p>
             <input
               type="email"
@@ -74,13 +152,20 @@ export function ReportGate({ children }: { children: React.ReactNode }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@company.com"
-              className="mt-4 w-full rounded-xl border border-zinc-200 px-3 py-2.5 text-sm outline-none focus:border-primary"
+              className="mt-4 w-full rounded-xl border border-border px-3 py-2.5 text-sm outline-none focus:border-primary"
             />
             <button
               type="submit"
-              className="mt-4 w-full rounded-xl bg-primary py-2.5 text-sm font-medium text-white hover:bg-primary-hover"
+              className="mt-4 w-full rounded-xl bg-primary py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary-hover"
             >
               Continue
+            </button>
+            <button
+              type="button"
+              onClick={dismissGate}
+              className="mt-2 w-full text-sm text-ink-muted hover:text-ink"
+            >
+              Skip for this session
             </button>
           </form>
         </div>

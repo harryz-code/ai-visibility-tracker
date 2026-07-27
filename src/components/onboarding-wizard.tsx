@@ -233,14 +233,14 @@ export function OnboardingWizard() {
   const selectedPromptCount = state.prompts.filter((p) => p.selected).length;
 
   const promptsByIntent = useMemo(() => {
-    const map = new Map<string, typeof state.prompts>();
+    const map = new Map<string, WorkspaceState["prompts"]>();
     for (const p of state.prompts) {
       const list = map.get(p.intentType) ?? [];
       list.push(p);
       map.set(p.intentType, list);
     }
     return [...map.entries()];
-  }, [state.prompts]);
+  }, [state]);
 
   function next() {
     if (step < 6) setStep(step + 1);

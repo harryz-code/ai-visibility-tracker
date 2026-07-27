@@ -18,9 +18,23 @@ pnpm dev
 Then open:
 
 - [http://localhost:3000](http://localhost:3000) — landing
+- [http://localhost:3000/onboarding](http://localhost:3000/onboarding) — 7-step setup (localStorage)
 - [http://localhost:3000/dashboard](http://localhost:3000/dashboard) — tracked demo dashboard (CI charts)
 - [http://localhost:3000/report](http://localhost:3000/report) — free instant report
 - [http://localhost:3000/r/demo-affirm-bnpl](http://localhost:3000/r/demo-affirm-bnpl) — sample shareable report
+
+### Stranger-path checklist (manual QA)
+
+1. Landing → **Start setup** → complete onboarding (industry grid + Other works)
+2. Refresh mid-onboarding → draft restores
+3. **Continue to App** → dashboard shows your brand + Demo badge; mobile menu works
+4. Prompts: filter win/lose; Esc closes drilldown
+5. Settings: add/remove competitor → Save
+6. Free report → industry grid → `/r/[slug]` → Share link / Download MD|JSON; Skip gate for session
+7. `/leaderboard` industry switcher updates table
+8. Drop SVGs in `public/brand/` and tweak `--primary` in `src/app/globals.css`
+
+Zero env vars required for the demo path.
 
 ---
 
@@ -28,8 +42,10 @@ Then open:
 
 | Surface | Route | Purpose |
 |---------|-------|---------|
+| Onboarding | `/onboarding` | Collect brand/industry/competitors/prompts |
 | Free instant report | `/report` → `/r/[slug]` | PLG wedge — mini-wave, shareable URL + OG image |
 | Paid-style dashboard | `/dashboard` | Timeseries, competitors, citations (demo fixtures) |
+| Index | `/leaderboard` | Public industry ranking stub |
 
 ---
 
