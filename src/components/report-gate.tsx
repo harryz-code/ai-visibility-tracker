@@ -10,10 +10,12 @@ export function ReportGate({
   children,
   brandName,
   payload,
+  slug,
 }: {
   children: React.ReactNode;
   brandName?: string;
   payload?: Record<string, unknown>;
+  slug?: string;
 }) {
   const [gated, setGated] = useState(false);
   const [email, setEmail] = useState("");
@@ -50,8 +52,31 @@ export function ReportGate({
     dismissGate();
   }
 
-  function emailPdf() {
-    setToast("Would send PDF via Resend (stubbed in demo).");
+  async function emailPdf() {
+    if (!slug) {
+      setToast("Nothing to email yet.");
+      setTimeout(() => setToast(null), 2000);
+      return;
+    }
+    const target = email || window.prompt("Email the report to:") || "";
+    if (!target.includes("@")) return;
+
+    setToast("Sending report…");
+    try {
+      const res = await fetch("/api/report/email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ slug, email: target }),
+      });
+      const json = await res.json();
+      setToast(
+        json.sent
+          ? `Report emailed to ${target}.`
+          : "Email queued (Resend not configured in this environment).",
+      );
+    } catch {
+      setToast("Could not send email right now.");
+    }
     setTimeout(() => setToast(null), 3000);
   }
 

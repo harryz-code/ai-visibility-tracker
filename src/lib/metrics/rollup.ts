@@ -24,6 +24,11 @@ export type BrandModelMetrics = {
   visibilityScore: number;
 };
 
+/** Visibility score 0–100: mention rate weighted by rec strength (max 3). */
+export function scoreFromMentionRate(rate: number, avgRecStrength = 1.6): number {
+  return Math.round(Math.min(100, rate * 100 * (0.5 + (avgRecStrength / 3) * 0.5)));
+}
+
 function domainFromUrl(url: string): string | null {
   try {
     return new URL(url).hostname.replace(/^www\./, "");
@@ -87,10 +92,7 @@ export function rollupMetrics(
     const posN = positionCounts.get(brand) ?? 0;
     const avgPosition = posN ? (positionSums.get(brand) ?? 0) / posN : null;
     const avgRec = n ? (recSums.get(brand) ?? 0) / n : 0;
-    // Visibility score 0–100: mention rate weighted by rec strength (max 3)
-    const visibilityScore = Math.round(
-      Math.min(100, ci.rate * 100 * (0.5 + (avgRec / 3) * 0.5)),
-    );
+    const visibilityScore = scoreFromMentionRate(ci.rate, avgRec);
 
     return {
       brand,

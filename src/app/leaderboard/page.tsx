@@ -1,15 +1,41 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SiteHeader } from "@/components/site-header";
 import { DemoBadge } from "@/components/brand";
-import { getIndustryLeaderboard } from "@/lib/demo/personalized";
+import {
+  getIndustryLeaderboard,
+  type PersonalizedDemo,
+} from "@/lib/demo/personalized";
 import { INDUSTRIES } from "@/lib/workspace/types";
 import Link from "next/link";
 
+type LeaderboardRow = PersonalizedDemo["competitors"][number];
+
 export default function LeaderboardPage() {
   const [industry, setIndustry] = useState<string>(INDUSTRIES[1]); // Financial Services
-  const rows = useMemo(() => getIndustryLeaderboard(industry), [industry]);
+  const fixtureRows = useMemo(() => getIndustryLeaderboard(industry), [industry]);
+  const [rows, setRows] = useState<LeaderboardRow[]>(fixtureRows);
+  const [isFixture, setIsFixture] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    setRows(fixtureRows);
+    setIsFixture(true);
+    fetch(`/api/leaderboard?industry=${encodeURIComponent(industry)}`)
+      .then((res) => res.json())
+      .then((json) => {
+        if (cancelled || !Array.isArray(json.rows)) return;
+        setRows(json.rows);
+        setIsFixture(Boolean(json.fixture));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+    // fixtureRows is derived from industry, no need to re-run on its identity change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [industry]);
 
   return (
     <>
@@ -19,14 +45,15 @@ export default function LeaderboardPage() {
           <p className="text-sm font-medium uppercase tracking-widest text-ink-muted">
             AI Visibility Index
           </p>
-          <DemoBadge />
+          {isFixture && <DemoBadge />}
         </div>
         <h1 className="mt-2 text-3xl font-semibold tracking-tight text-ink">
           {industry} · July 2026
         </h1>
         <p className="mt-2 text-ink-body">
-          Public category leaderboard (fixture data). Switch industries — still
-          demo metrics until live waves ship.
+          {isFixture
+            ? "Public category leaderboard (fixture data). Switch industries — still demo metrics until live waves ship."
+            : "Public category leaderboard — live weekly-wave metrics."}
         </p>
         <label className="mt-6 block text-sm font-medium text-ink">
           Industry

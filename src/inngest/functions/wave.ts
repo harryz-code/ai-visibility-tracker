@@ -88,6 +88,16 @@ export const waveStart = inngest.createFunction(
       );
     }
 
+    // Best-effort fan-in: samples are fire-and-forget events, so we give
+    // them a window to land before kicking off the judge pass.
+    if (events.length > 0) {
+      await step.sleep("wait-for-samples", "2m");
+      await step.sendEvent("trigger-judge", {
+        name: "wave/judge",
+        data: { runId },
+      });
+    }
+
     return {
       runId,
       queued: events.length,
@@ -172,4 +182,3 @@ export const waveSample = inngest.createFunction(
   },
 );
 
-export const inngestFunctions = [waveStart, waveSample];

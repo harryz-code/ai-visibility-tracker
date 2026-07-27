@@ -8,6 +8,7 @@ import {
   suggestedServices,
 } from "@/lib/demo/generator";
 import { loadWorkspace, saveWorkspace } from "@/lib/workspace/storage";
+import { createClient } from "@/lib/supabase/client";
 import {
   clearOnboardingDraft,
   loadOnboardingDraft,
@@ -301,6 +302,28 @@ export function OnboardingWizard() {
     }));
   }
 
+  /** Soft-integration: if a Supabase session exists, persist the workspace
+   * server-side too. Local storage remains the source of truth for the
+   * fixture UI either way. */
+  function syncWorkspaceIfSignedIn(final: WorkspaceState) {
+    const supabase = createClient();
+    if (!supabase) return;
+    supabase.auth.getSession().then(({ data }) => {
+      if (!data.session) return;
+      fetch("/api/workspace", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: final.brand.name || "My workspace",
+          plan: final.plan,
+          trackedBrandName: final.brand.name || undefined,
+          categoryName: resolveCategoryLabel(final.brand),
+          market: final.brand.market,
+        }),
+      }).catch(() => {});
+    });
+  }
+
   function generatePrompts() {
     const selected = state.competitors.filter((c) => c.selected);
     const categoryLabel = resolveCategoryLabel(state.brand);
@@ -323,6 +346,7 @@ export function OnboardingWizard() {
     };
     saveWorkspace(final);
     clearOnboardingDraft();
+    syncWorkspaceIfSignedIn(final);
     router.push("/dashboard");
   }
 

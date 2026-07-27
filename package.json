@@ -18,6 +18,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.115.0",
     "@google/generative-ai": "^0.24.1",
+    "@supabase/ssr": "^0.12.3",
+    "@supabase/supabase-js": "^2.110.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
@@ -27,9 +29,12 @@
     "next": "15.5.22",
     "openai": "^6.49.0",
     "postgres": "^3.4.9",
+    "posthog-node": "^5.46.1",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "recharts": "^3.10.1",
+    "resend": "^6.18.0",
+    "stripe": "^22.3.2",
     "tailwind-merge": "^3.6.0",
     "zod": "^4.4.3"
   },

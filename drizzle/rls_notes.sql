@@ -1,8 +1,8 @@
--- RLS intent notes (apply in Supabase SQL editor after drizzle migrate).
--- Completions are the immutable asset: service_role only.
--- Workspace-scoped tables: members see only their workspace rows.
+-- RLS policies for AVT tables (applied on Supabase project cuyxhvodngyzasqdsdjm).
+-- Completions: service_role only (immutable raw asset).
+-- Other tables: service_role full access via server DATABASE_URL / service role.
+-- reports: anon can SELECT where status = 'ready' (shareable free reports).
+-- workspace_members: users can SELECT their own membership rows.
 
--- Example (not auto-applied):
--- ALTER TABLE completions ENABLE ROW LEVEL SECURITY;
--- CREATE POLICY completions_service_only ON completions
---   FOR ALL USING (auth.role() = 'service_role');
+-- Reminder: enabling RLS without policies blocks PostgREST. Always add policies
+-- before relying on the anon/authenticated keys from the browser.

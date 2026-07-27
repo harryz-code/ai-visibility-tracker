@@ -36,6 +36,13 @@ export const runStatusEnum = pgEnum("run_status", [
   "cancelled",
 ]);
 
+export const reportStatusEnum = pgEnum("report_status", [
+  "pending",
+  "running",
+  "ready",
+  "failed",
+]);
+
 export const planEnum = pgEnum("plan", ["free", "solo", "team"]);
 
 export const subscriptionStatusEnum = pgEnum("subscription_status", [
@@ -236,6 +243,36 @@ export const reports = pgTable("reports", {
   categoryName: text("category_name").notNull(),
   email: text("email"),
   payload: jsonb("payload").$type<Record<string, unknown>>().notNull(),
+  status: reportStatusEnum("status").notNull().default("ready"),
+  runId: uuid("run_id"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .defaultNow()
+    .notNull(),
+});
+
+/** Per-email daily cap for free report generation. */
+export const reportRateLimits = pgTable(
+  "report_rate_limits",
+  {
+    email: text("email").notNull(),
+    day: date("day").notNull(),
+    count: integer("count").notNull().default(0),
+  },
+  (t) => [primaryKey({ columns: [t.email, t.day] })],
+);
+
+/** Significance-gated alerts surfaced in the dashboard. */
+export const alerts = pgTable("alerts", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  workspaceId: uuid("workspace_id")
+    .notNull()
+    .references(() => workspaces.id),
+  brandId: uuid("brand_id")
+    .notNull()
+    .references(() => brands.id),
+  title: text("title").notNull(),
+  detail: text("detail").notNull(),
+  significant: boolean("significant").notNull().default(false),
   createdAt: timestamp("created_at", { withTimezone: true })
     .defaultNow()
     .notNull(),

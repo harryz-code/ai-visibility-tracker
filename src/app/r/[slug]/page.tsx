@@ -60,7 +60,7 @@ export default async function ReportViewPage({ params }: Props) {
   return (
     <>
       <SiteHeader />
-      <ReportGate brandName={report.brandName} payload={report}>
+      <ReportGate brandName={report.brandName} payload={report} slug={slug}>
         <main className="mx-auto max-w-6xl space-y-10 px-6 py-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>

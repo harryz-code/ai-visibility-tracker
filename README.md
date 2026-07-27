@@ -219,6 +219,36 @@ Dashboard and report pages render:
 
 ---
 
+## Backend roadmap wiring
+
+Phases 2–4 (free report rate-limiting, judge/rollup pipeline, alerts, billing,
+auth, email, analytics) are wired end-to-end but every piece degrades
+gracefully when its env vars are missing — **`pnpm build` and the fixture UI
+work with zero env vars**, exactly as before.
+
+| Concern | Env vars | Behavior when unset |
+|---------|----------|----------------------|
+| Database | `DATABASE_URL` | In-memory fixtures only; `/api/report`, `/api/wave/start`, leaderboard, dashboards all fall back to `src/lib/demo/*` |
+| Supabase auth | `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY` | `/login`, `/api/workspace`, `/api/alerts` treat every request as unauthenticated (401); onboarding keeps working via localStorage |
+| Wave jobs | `INNGEST_EVENT_KEY`, `INNGEST_SIGNING_KEY` | `/api/wave/start` runs the wave synchronously in-process (`src/lib/pipeline/wave-sync.ts`) instead of fanning out via Inngest |
+| Judge + rollup | (model keys) | Heuristic judge; `wave/judge` → `wave/rollup` Inngest functions or the sync pipeline write `extractions` + `metrics_daily` either way |
+| Billing | `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `STRIPE_PRICE_SOLO`, `STRIPE_PRICE_TEAM` | `/api/stripe/*` return `501`; pricing page buttons fall back to the onboarding demo |
+| Email | `RESEND_API_KEY`, `RESEND_FROM_EMAIL` | `src/lib/email/resend.ts` logs instead of sending |
+| Analytics | `POSTHOG_API_KEY`, `POSTHOG_HOST` | `src/lib/analytics/posthog.ts` capture calls are no-ops |
+
+New tables (`drizzle/0001_roadmap_extensions.sql`): `report_rate_limits` (1
+free report per email per day), `alerts` (significance-gated, surfaced via
+`/api/alerts`), and `reports.status`/`reports.run_id` for async report
+generation (`/api/report/[slug]/status`).
+
+New Inngest functions (`src/inngest/functions/`): `wave-judge`, `wave-rollup`
+(chained after `wave-start`'s fan-out), `digest-weekly` (Resend stub, cron
+`0 9 * * 1`), and `alerts-scan` (Wilson-significance alert stub, cron
+`0 * * * *`). All are also directly callable functions for the synchronous
+(no-Inngest) path.
+
+---
+
 ## License / naming
 
 Private product exploration under public source for now. Rename before launch; register a domain that does not collide with adjacent brands.

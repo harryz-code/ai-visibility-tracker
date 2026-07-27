@@ -1,4 +1,5 @@
 import { SiteHeader } from "@/components/site-header";
+import { PricingCheckoutButton } from "@/components/pricing-checkout-button";
 import Link from "next/link";
 
 export const metadata = {
@@ -25,8 +26,9 @@ export default function PricingPage() {
             Pricing
           </h1>
           <p className="mt-2 text-ink-body">
-            Self-serve plans for ongoing AI visibility tracking. Billing is not
-            wired in this demo — explore the product via setup.
+            Self-serve plans for ongoing AI visibility tracking. Checkout
+            redirects to Stripe when configured, otherwise explore the
+            product via the local fixture demo.
           </p>
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-2">
@@ -36,11 +38,17 @@ export default function PricingPage() {
               $99
               <span className="text-base font-normal text-ink-muted">/mo</span>
             </p>
+            <PricingCheckoutButton
+              plan="solo"
+              className="mt-8 inline-flex h-btn-lg w-full items-center justify-center rounded-[8px] bg-ink text-sm font-semibold text-primary-foreground hover:opacity-90 disabled:opacity-60"
+            >
+              Start Solo
+            </PricingCheckoutButton>
             <Link
               href="/onboarding"
-              className="mt-8 inline-flex h-btn-lg w-full items-center justify-center rounded-[8px] bg-ink text-sm font-semibold text-primary-foreground hover:opacity-90"
+              className="mt-2 block text-center text-xs text-ink-muted hover:text-ink"
             >
-              Explore demo
+              Explore the demo instead
             </Link>
           </div>
           <div className="rounded-[16px] border border-primary/40 bg-primary-muted p-8 card-shadow">
@@ -49,15 +57,18 @@ export default function PricingPage() {
               $299
               <span className="text-base font-normal text-ink-muted">/mo</span>
             </p>
+            <PricingCheckoutButton
+              plan="team"
+              className="mt-8 inline-flex h-btn-lg w-full items-center justify-center rounded-[8px] bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary-hover disabled:opacity-60"
+            >
+              Start Team
+            </PricingCheckoutButton>
             <Link
               href="/onboarding"
-              className="mt-8 inline-flex h-btn-lg w-full items-center justify-center rounded-[8px] bg-primary text-sm font-semibold text-primary-foreground hover:bg-primary-hover"
+              className="mt-2 block text-center text-xs text-ink-muted hover:text-ink"
             >
-              Explore demo
+              Explore the demo instead
             </Link>
-            <p className="mt-2 text-center text-xs text-ink-muted">
-              Checkout later — demo uses local fixtures
-            </p>
           </div>
         </div>
         <table className="mt-12 w-full text-left text-sm">
