@@ -144,26 +144,108 @@ const COMPETITORS_BY_CATEGORY: Record<
   string,
   { name: string; domain: string }[]
 > = {
-  BNPL: [
-    { name: "Klarna", domain: "klarna.com" },
-    { name: "Afterpay", domain: "afterpay.com" },
-    { name: "Sezzle", domain: "sezzle.com" },
-    { name: "PayPal Pay in 4", domain: "paypal.com" },
-    { name: "Zip", domain: "zip.co" },
+  CPG: [
+    { name: "P&G", domain: "pg.com" },
+    { name: "Unilever", domain: "unilever.com" },
+    { name: "Nestlé", domain: "nestle.com" },
+    { name: "PepsiCo", domain: "pepsico.com" },
+  ],
+  "Financial Services": [
+    { name: "Chase", domain: "chase.com" },
+    { name: "Capital One", domain: "capitalone.com" },
+    { name: "American Express", domain: "americanexpress.com" },
+    { name: "SoFi", domain: "sofi.com" },
     { name: "Affirm", domain: "affirm.com" },
   ],
-  Neobank: [
-    { name: "Mercury", domain: "mercury.com" },
-    { name: "Relay", domain: "relayfi.com" },
-    { name: "Brex", domain: "brex.com" },
-    { name: "Ramp", domain: "ramp.com" },
-    { name: "Novo", domain: "novo.co" },
+  Retail: [
+    { name: "Amazon", domain: "amazon.com" },
+    { name: "Walmart", domain: "walmart.com" },
+    { name: "Target", domain: "target.com" },
+    { name: "Shopify", domain: "shopify.com" },
   ],
-  CRM: [
+  "Media & Entertainment": [
+    { name: "Netflix", domain: "netflix.com" },
+    { name: "Disney+", domain: "disneyplus.com" },
+    { name: "Spotify", domain: "spotify.com" },
+    { name: "YouTube", domain: "youtube.com" },
+  ],
+  Technology: [
     { name: "Salesforce", domain: "salesforce.com" },
     { name: "HubSpot", domain: "hubspot.com" },
-    { name: "Pipedrive", domain: "pipedrive.com" },
-    { name: "Close", domain: "close.com" },
+    { name: "Stripe", domain: "stripe.com" },
+    { name: "Notion", domain: "notion.so" },
+  ],
+  Hospitality: [
+    { name: "Marriott", domain: "marriott.com" },
+    { name: "Airbnb", domain: "airbnb.com" },
+    { name: "Hilton", domain: "hilton.com" },
+    { name: "Booking.com", domain: "booking.com" },
+  ],
+  "QSRs & Restaurants": [
+    { name: "McDonald's", domain: "mcdonalds.com" },
+    { name: "Chipotle", domain: "chipotle.com" },
+    { name: "Starbucks", domain: "starbucks.com" },
+    { name: "DoorDash", domain: "doordash.com" },
+  ],
+  "Home Services": [
+    { name: "Angi", domain: "angi.com" },
+    { name: "Thumbtack", domain: "thumbtack.com" },
+    { name: "TaskRabbit", domain: "taskrabbit.com" },
+    { name: "HomeAdvisor", domain: "homeadvisor.com" },
+  ],
+  "Alcohol & Spirits": [
+    { name: "Diageo", domain: "diageo.com" },
+    { name: "Beam Suntory", domain: "beamsuntory.com" },
+    { name: "Total Wine", domain: "totalwine.com" },
+    { name: "Drizly", domain: "drizly.com" },
+  ],
+  "Consumer Electronics": [
+    { name: "Apple", domain: "apple.com" },
+    { name: "Samsung", domain: "samsung.com" },
+    { name: "Sony", domain: "sony.com" },
+    { name: "Best Buy", domain: "bestbuy.com" },
+  ],
+  Gaming: [
+    { name: "Xbox", domain: "xbox.com" },
+    { name: "PlayStation", domain: "playstation.com" },
+    { name: "Steam", domain: "steampowered.com" },
+    { name: "Epic Games", domain: "epicgames.com" },
+  ],
+  Fitness: [
+    { name: "Peloton", domain: "onepeloton.com" },
+    { name: "Nike Training", domain: "nike.com" },
+    { name: "Whoop", domain: "whoop.com" },
+    { name: "Strava", domain: "strava.com" },
+  ],
+  Insurance: [
+    { name: "Geico", domain: "geico.com" },
+    { name: "Progressive", domain: "progressive.com" },
+    { name: "Lemonade", domain: "lemonade.com" },
+    { name: "State Farm", domain: "statefarm.com" },
+  ],
+  Sports: [
+    { name: "Nike", domain: "nike.com" },
+    { name: "Adidas", domain: "adidas.com" },
+    { name: "ESPN", domain: "espn.com" },
+    { name: "DraftKings", domain: "draftkings.com" },
+  ],
+  "Betting & Prediction Markets": [
+    { name: "DraftKings", domain: "draftkings.com" },
+    { name: "FanDuel", domain: "fanduel.com" },
+    { name: "Kalshi", domain: "kalshi.com" },
+    { name: "Polymarket", domain: "polymarket.com" },
+  ],
+  "Beauty & Personal Care": [
+    { name: "Sephora", domain: "sephora.com" },
+    { name: "Ulta", domain: "ulta.com" },
+    { name: "The Ordinary", domain: "theordinary.com" },
+    { name: "Glossier", domain: "glossier.com" },
+  ],
+  Education: [
+    { name: "Coursera", domain: "coursera.org" },
+    { name: "Duolingo", domain: "duolingo.com" },
+    { name: "Khan Academy", domain: "khanacademy.org" },
+    { name: "Udemy", domain: "udemy.com" },
   ],
   default: [
     { name: "Competitor A", domain: "example-a.com" },
