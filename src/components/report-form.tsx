@@ -1,0 +1,141 @@
+"use client";
+
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
+
+const CATEGORIES = [
+  "BNPL",
+  "Neobank",
+  "CRM",
+  "HRIS",
+  "Payroll",
+  "Accounting",
+  "E-commerce platform",
+  "Email marketing",
+  "CDN",
+  "Observability",
+  "Feature flags",
+  "Auth",
+  "Payments",
+  "Lending",
+  "Insurance",
+  "Travel booking",
+  "Food delivery",
+  "Ride hail",
+  "Project management",
+  "Design tools",
+];
+
+export function ReportForm() {
+  const router = useRouter();
+  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("BNPL");
+  const [email, setEmail] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [status, setStatus] = useState<string | null>(null);
+  const [pending, startTransition] = useTransition();
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("Queuing mini-wave…");
+    setProgress(5);
+
+    startTransition(async () => {
+      const stages = [
+        "Generating prompt corpus…",
+        "Sampling OpenAI…",
+        "Sampling Anthropic…",
+        "Sampling Gemini…",
+        "Sampling Perplexity…",
+        "Running judge extraction…",
+        "Rolling up metrics + CIs…",
+      ];
+      for (let i = 0; i < stages.length; i++) {
+        setStatus(stages[i]);
+        setProgress(10 + Math.round(((i + 1) / stages.length) * 70));
+        await new Promise((r) => setTimeout(r, 350));
+      }
+
+      const res = await fetch("/api/report", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ brand, category, email }),
+      });
+      const json = await res.json();
+      if (!res.ok) {
+        setStatus(json.error ?? "Failed to create report");
+        setProgress(0);
+        return;
+      }
+      setProgress(100);
+      setStatus("Report ready — redirecting…");
+      router.push(`/r/${json.slug}`);
+    });
+  }
+
+  return (
+    <form onSubmit={onSubmit} className="mx-auto max-w-lg space-y-5">
+      <div>
+        <label className="block text-sm font-medium text-zinc-700">Brand</label>
+        <input
+          required
+          value={brand}
+          onChange={(e) => setBrand(e.target.value)}
+          placeholder="Affirm"
+          className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900"
+        />
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-zinc-700">
+          Category
+        </label>
+        <select
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
+          className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900"
+        >
+          {CATEGORIES.map((c) => (
+            <option key={c} value={c}>
+              {c}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label className="block text-sm font-medium text-zinc-700">
+          Work email
+        </label>
+        <input
+          required
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@company.com"
+          className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900"
+        />
+      </div>
+      <button
+        type="submit"
+        disabled={pending}
+        className="w-full rounded-md bg-zinc-900 px-4 py-2.5 text-sm font-medium text-white hover:bg-zinc-800 disabled:opacity-60"
+      >
+        {pending ? "Running mini-wave…" : "Generate free report"}
+      </button>
+      {status && (
+        <div className="space-y-2">
+          <div className="h-2 overflow-hidden rounded-full bg-zinc-200">
+            <div
+              className="h-full bg-zinc-900 transition-all duration-300"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          <p className="text-sm text-zinc-600">{status}</p>
+        </div>
+      )}
+      <p className="text-xs text-zinc-500">
+        Demo runs in fixture mode (~$0). Live waves need model API keys.
+        Limit: 1 report per email per day (stubbed).
+      </p>
+    </form>
+  );
+}

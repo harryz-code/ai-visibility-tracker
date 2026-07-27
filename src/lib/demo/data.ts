@@ -227,7 +227,6 @@ export function getDemoDataset(trackedBrand = "Affirm"): DemoDataset {
     { domain: "wikipedia.org", share: 0.07, count: 17 },
   ];
 
-  const tracked = perModel.reduce((a, b) => a + b.visibilityScore, 0) / perModel.length;
   const klarna = competitors.find((c) => c.brand === "Klarna")!;
   const weakest = [...perModel].sort((a, b) => a.visibilityScore - b.visibilityScore)[0];
 

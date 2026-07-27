@@ -4,25 +4,19 @@ import { getDb } from "@/db";
 import { completions, prompts, runs } from "@/db/schema";
 import { ALL_MODELS, complete, type ModelProvider } from "@/lib/models";
 
-export type WaveStartEvent = {
-  name: "wave/start";
-  data: {
-    runId: string;
-    categoryId: string;
-    sampleN?: number;
-    models?: ModelProvider[];
-  };
+export type WaveStartData = {
+  runId: string;
+  categoryId: string;
+  sampleN?: number;
+  models?: ModelProvider[];
 };
 
-export type WaveSampleEvent = {
-  name: "wave/sample";
-  data: {
-    runId: string;
-    promptId: string;
-    model: ModelProvider;
-    sampleN: number;
-    promptText: string;
-  };
+export type WaveSampleData = {
+  runId: string;
+  promptId: string;
+  model: ModelProvider;
+  sampleN: number;
+  promptText: string;
 };
 
 function maxWaveCostUsd(): number {
@@ -36,15 +30,18 @@ function maxWaveCostUsd(): number {
  * active prompt × model × sample index.
  */
 export const waveStart = inngest.createFunction(
-  { id: "wave-start", retries: 2 },
-  { event: "wave/start" },
+  {
+    id: "wave-start",
+    retries: 2,
+    triggers: [{ event: "wave/start" }],
+  },
   async ({ event, step }) => {
     const {
       runId,
       categoryId,
       sampleN = 8,
       models = ALL_MODELS,
-    } = event.data as WaveStartEvent["data"];
+    } = event.data as WaveStartData;
 
     await step.run("mark-running", async () => {
       const db = getDb();
@@ -64,7 +61,7 @@ export const waveStart = inngest.createFunction(
         );
     });
 
-    const events = activePrompts.flatMap((p) =>
+    const events = activePrompts.flatMap((p: { id: string; text: string }) =>
       models.flatMap((model) =>
         Array.from({ length: sampleN }, (_, i) => ({
           name: "wave/sample" as const,
@@ -74,18 +71,20 @@ export const waveStart = inngest.createFunction(
             model,
             sampleN: i + 1,
             promptText: p.text,
-          },
+          } satisfies WaveSampleData,
         })),
       ),
     );
 
-    // Fan-out in chunks to avoid huge single sends
     const chunkSize = 50;
     for (let i = 0; i < events.length; i += chunkSize) {
       const chunk = events.slice(i, i + chunkSize);
       await step.sendEvent(
         `fanout-${i}`,
-        chunk.map((e) => ({ name: e.name, data: e.data })),
+        chunk.map((e: (typeof events)[number]) => ({
+          name: e.name,
+          data: e.data,
+        })),
       );
     }
 
@@ -104,11 +103,14 @@ export const waveStart = inngest.createFunction(
  * (run_id, prompt_id, model, sample_n). Budget kill-switch aborts spend.
  */
 export const waveSample = inngest.createFunction(
-  { id: "wave-sample", retries: 3 },
-  { event: "wave/sample" },
+  {
+    id: "wave-sample",
+    retries: 3,
+    triggers: [{ event: "wave/sample" }],
+  },
   async ({ event, step }) => {
     const { runId, promptId, model, sampleN, promptText } =
-      event.data as WaveSampleEvent["data"];
+      event.data as WaveSampleData;
 
     const budgetOk = await step.run("check-budget", async () => {
       const db = getDb();
@@ -158,7 +160,6 @@ export const waveSample = inngest.createFunction(
 
         return { id: row?.id ?? null, duplicate: !row };
       } catch (err) {
-        // Unique violation race → treat as idempotent success
         const msg = err instanceof Error ? err.message : String(err);
         if (msg.includes("unique") || msg.includes("duplicate")) {
           return { id: null, duplicate: true };
