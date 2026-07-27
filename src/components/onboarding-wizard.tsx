@@ -1,14 +1,20 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   generatePromptCorpus,
   suggestedCompetitors,
   suggestedServices,
 } from "@/lib/demo/generator";
-import { saveWorkspace } from "@/lib/workspace/storage";
-import { CategorySelect } from "@/components/category-select";
+import { loadWorkspace, saveWorkspace } from "@/lib/workspace/storage";
+import {
+  clearOnboardingDraft,
+  loadOnboardingDraft,
+  saveOnboardingDraft,
+} from "@/lib/workspace/onboarding-draft";
+import { BrandMark, DemoBadge } from "@/components/brand";
+import { IndustryGrid } from "@/components/industry-grid";
 import {
   emptyWorkspace,
   OTHER_CATEGORY,
@@ -18,6 +24,7 @@ import {
   type ModelProvider,
   type WorkspaceState,
 } from "@/lib/workspace/types";
+import Link from "next/link";
 
 const STEP_CAPTIONS = [
   "SETTING UP YOUR BRAND",
@@ -83,20 +90,57 @@ function ChoiceCard({
   );
 }
 
-function PreviewPane({ step, brand }: { step: number; brand: string }) {
+function PreviewPane({
+  step,
+  brand,
+  industry,
+  competitorCount,
+  promptCount,
+  models,
+}: {
+  step: number;
+  brand: string;
+  industry: string;
+  competitorCount: number;
+  promptCount: number;
+  models: string[];
+}) {
+  const ranking = [
+    brand || "You",
+    "Competitor A",
+    "Competitor B",
+  ];
   return (
     <div className="relative hidden h-full flex-col justify-center bg-primary-muted p-8 lg:flex">
+      <div className="absolute right-6 top-6">
+        <DemoBadge />
+      </div>
       <div className="mx-auto w-full max-w-xl overflow-hidden rounded-2xl border border-white/60 bg-white/90 shadow-lg opacity-90">
-        <div className="flex gap-4 border-b border-zinc-100 px-4 py-3 text-xs font-medium text-zinc-500">
-          <span className={step >= 4 ? "text-primary" : ""}>Dashboard</span>
-          <span className={step === 4 || step === 5 ? "text-primary" : ""}>
-            Monitoring
+        <div className="flex items-center justify-between border-b border-border px-4 py-3 text-xs font-medium text-ink-muted">
+          <div className="flex gap-4">
+            <span className={step >= 4 ? "text-primary" : ""}>Dashboard</span>
+            <span className={step === 4 || step === 5 ? "text-primary" : ""}>
+              Monitoring
+            </span>
+          </div>
+          <span className="truncate text-[10px] uppercase tracking-wide">
+            {industry || "Industry"}
           </span>
-          <span>AI Visibility</span>
         </div>
         <div className="space-y-4 p-4">
-          <div className="h-28 rounded-lg bg-gradient-to-br from-primary-muted to-zinc-100 p-3">
-            <p className="text-[10px] uppercase tracking-wide text-zinc-400">
+          <div className="flex gap-2 text-[11px] text-ink-muted">
+            <span className="rounded-full bg-surface-muted px-2 py-0.5">
+              {brand || "Brand"}
+            </span>
+            <span className="rounded-full bg-surface-muted px-2 py-0.5">
+              {competitorCount} competitors
+            </span>
+            <span className="rounded-full bg-surface-muted px-2 py-0.5">
+              {promptCount || "—"} prompts
+            </span>
+          </div>
+          <div className="h-28 rounded-lg bg-gradient-to-br from-primary-muted to-surface-muted p-3">
+            <p className="text-[10px] uppercase tracking-wide text-ink-muted">
               Visibility over time
             </p>
             <div className="mt-3 flex h-16 items-end gap-1">
@@ -109,28 +153,32 @@ function PreviewPane({ step, brand }: { step: number; brand: string }) {
               ))}
             </div>
           </div>
-          <div className="grid grid-cols-3 gap-2">
-            {["OpenAI", "Claude", "Gemini"].map((m) => (
-              <div
-                key={m}
-                className="rounded-lg border border-zinc-100 p-2 text-center"
-              >
-                <p className="text-[10px] text-zinc-400">{m}</p>
-                <p className="text-sm font-semibold text-zinc-800">
-                  {40 + m.length * 3}
-                </p>
-              </div>
-            ))}
+          <div className="grid grid-cols-4 gap-2">
+            {(models.length ? models : ["openai", "anthropic", "gemini", "perplexity"])
+              .slice(0, 4)
+              .map((m) => (
+                <div
+                  key={m}
+                  className="rounded-lg border border-border p-2 text-center"
+                >
+                  <p className="truncate text-[10px] capitalize text-ink-muted">
+                    {m}
+                  </p>
+                  <p className="text-sm font-semibold text-ink">
+                    {40 + m.length * 3}
+                  </p>
+                </div>
+              ))}
           </div>
-          <div className="rounded-lg border border-zinc-100 p-3">
-            <p className="text-[10px] uppercase tracking-wide text-zinc-400">
+          <div className="rounded-lg border border-border p-3">
+            <p className="text-[10px] uppercase tracking-wide text-ink-muted">
               Industry ranking
             </p>
             <div className="mt-2 space-y-2 blur-[3px] select-none">
-              {[brand || "You", "Competitor A", "Competitor B"].map((b, i) => (
+              {ranking.map((b, i) => (
                 <div
-                  key={b}
-                  className="flex items-center justify-between text-xs text-zinc-600"
+                  key={b + i}
+                  className="flex items-center justify-between text-xs text-ink-body"
                 >
                   <span>
                     {i + 1}. {b}
@@ -151,6 +199,8 @@ function PreviewPane({ step, brand }: { step: number; brand: string }) {
 
 export function OnboardingWizard() {
   const router = useRouter();
+  const [hydrated, setHydrated] = useState(false);
+  const [hasExisting, setHasExisting] = useState(false);
   const [step, setStep] = useState(0);
   const [state, setState] = useState<WorkspaceState>(() => {
     const base = emptyWorkspace();
@@ -161,6 +211,22 @@ export function OnboardingWizard() {
   const [customCompName, setCustomCompName] = useState("");
   const [customCompUrl, setCustomCompUrl] = useState("");
   const [newService, setNewService] = useState("");
+
+  useEffect(() => {
+    const existing = loadWorkspace();
+    setHasExisting(Boolean(existing.completedOnboarding));
+    const draft = loadOnboardingDraft();
+    if (draft) {
+      setStep(draft.step);
+      setState(draft.state);
+    }
+    setHydrated(true);
+  }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    saveOnboardingDraft(step, state);
+  }, [hydrated, step, state]);
 
   const selectedCompetitorCount = state.competitors.filter((c) => c.selected)
     .length;
@@ -219,6 +285,7 @@ export function OnboardingWizard() {
       updatedAt: new Date().toISOString(),
     };
     saveWorkspace(final);
+    clearOnboardingDraft();
     router.push("/dashboard");
   }
 
@@ -241,11 +308,19 @@ export function OnboardingWizard() {
   return (
     <div className="grid min-h-screen lg:grid-cols-[minmax(320px,420px)_1fr]">
       <div className="flex flex-col border-r border-zinc-200 bg-white">
-        <div className="flex items-center gap-2 px-6 py-5">
-          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary text-xs font-bold text-white">
-            A
-          </span>
-          <span className="font-semibold tracking-tight text-zinc-900">AVT</span>
+        <div className="flex items-center justify-between px-6 py-5">
+          <BrandMark size={28} href="/" />
+          <div className="flex items-center gap-3">
+            <DemoBadge />
+            {hasExisting && (
+              <Link
+                href="/dashboard"
+                className="text-xs font-medium text-primary hover:underline"
+              >
+                Skip to dashboard
+              </Link>
+            )}
+          </div>
         </div>
 
         <div className="flex flex-1 flex-col px-6 pb-6">
@@ -342,10 +417,10 @@ export function OnboardingWizard() {
                   </select>
                 </label>
               </div>
-              <label className="block text-xs font-medium uppercase tracking-wide text-zinc-500">
+              <label className="block text-xs font-medium uppercase tracking-wide text-ink-muted">
                 Industry
-                <div className="mt-1">
-                  <CategorySelect
+                <div className="mt-2">
+                  <IndustryGrid
                     value={state.brand.category}
                     otherValue={state.brand.categoryOther}
                     onChange={onCategoryChange}
@@ -800,7 +875,14 @@ export function OnboardingWizard() {
         </div>
       </div>
 
-      <PreviewPane step={step} brand={state.brand.name} />
+      <PreviewPane
+        step={step}
+        brand={state.brand.name}
+        industry={resolveCategoryLabel(state.brand)}
+        competitorCount={selectedCompetitorCount}
+        promptCount={selectedPromptCount}
+        models={state.models}
+      />
     </div>
   );
 }
