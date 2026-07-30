@@ -217,7 +217,18 @@ export function IconSuppressed(props: IconProps) {
   );
 }
 
+export function IconContent(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <path d="M7 4h8l4 4v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1Z" />
+      <path d="M15 4v4h4M9 13h6M9 17h4" />
+    </Icon>
+  );
+}
+
 export const NAV_ICONS = {
+  Insights: IconOverview,
+  Content: IconContent,
   Overview: IconOverview,
   Competitors: IconCompetitors,
   Prompts: IconPrompts,

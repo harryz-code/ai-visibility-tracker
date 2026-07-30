@@ -4,10 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandMark, DemoBadge } from "@/components/brand";
-import {
-  IconClose,
-  NAV_ICONS,
-} from "@/components/icons";
+import { IconClose, NAV_ICONS } from "@/components/icons";
 import { loadWorkspace } from "@/lib/workspace/storage";
 import {
   resolveCategoryLabel,
@@ -16,10 +13,8 @@ import {
 import { cn } from "@/lib/utils";
 
 const NAV = [
-  { href: "/dashboard", label: "Overview" as const },
-  { href: "/dashboard/competitors", label: "Competitors" as const },
-  { href: "/dashboard/prompts", label: "Prompts" as const },
-  { href: "/dashboard/citations", label: "Citations" as const },
+  { href: "/dashboard/insights", label: "Insights" as const },
+  { href: "/dashboard/content", label: "Content" as const },
   { href: "/dashboard/alerts", label: "Alerts" as const },
   { href: "/dashboard/settings", label: "Settings" as const },
   { href: "/dashboard/admin/prompts", label: "Admin" as const },
@@ -42,9 +37,15 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
     <nav className="flex flex-1 flex-col gap-0.5 p-3">
       {NAV.map((item) => {
         const active =
-          item.href === "/dashboard"
-            ? pathname === "/dashboard"
-            : pathname.startsWith(item.href);
+          item.href === "/dashboard/insights"
+            ? pathname.startsWith("/dashboard/insights") ||
+              pathname === "/dashboard" ||
+              pathname.startsWith("/dashboard/prompts") ||
+              pathname.startsWith("/dashboard/citations") ||
+              pathname.startsWith("/dashboard/competitors")
+            : item.href === "/dashboard/content"
+              ? pathname.startsWith("/dashboard/content")
+              : pathname.startsWith(item.href);
         const Icon = NAV_ICONS[item.label];
         return (
           <Link
@@ -144,10 +145,11 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           {children}
         </div>
         <nav className="fixed bottom-0 left-0 right-0 z-30 flex border-t border-border bg-surface md:hidden">
-          {NAV.slice(0, 5).map((item) => {
+          {NAV.slice(0, 4).map((item) => {
             const active =
-              item.href === "/dashboard"
-                ? pathname === "/dashboard"
+              item.href === "/dashboard/insights"
+                ? pathname.startsWith("/dashboard/insights") ||
+                  pathname === "/dashboard"
                 : pathname.startsWith(item.href);
             const Icon = NAV_ICONS[item.label];
             return (
